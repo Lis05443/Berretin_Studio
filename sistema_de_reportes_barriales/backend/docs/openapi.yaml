@@ -1,0 +1,327 @@
+openapi: 3.0.3
+info:
+  title: API — Sistema de Reportes Barriales Comunal
+  description: >
+    API REST para la gestión de incidencias urbanas (alumbrado, infraestructura,
+    limpieza, seguridad, ruidos, arbolado, pluvial). Autenticación JWT para
+    operadores/administradores, sanitización XSS, sentencias preparadas SQL,
+    rate limiting y enmascaramiento de datos personales (Ley 25.326).
+  version: "1.0.0"
+  contact:
+    name: Jefatura de Área Técnica — E.E.S.T. N°6 "Chacabuco"
+servers:
+  - url: http://localhost:3000/api
+    description: Servidor local de desarrollo
+
+tags:
+  - name: Reportes
+  - name: Comentarios
+  - name: Autenticación
+  - name: Estadísticas
+
+paths:
+  /reports:
+    post:
+      tags: [Reportes]
+      summary: Crear un nuevo reporte de incidencia
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [nombre_apellido, dni, tipo_incidente, direccion, descripcion]
+              properties:
+                nombre_apellido: { type: string, example: "Juan Pérez" }
+                dni: { type: string, example: "30123456" }
+                contacto: { type: string, example: "juan@example.com" }
+                tipo_incidente:
+                  type: string
+                  enum: [alumbrado, infraestructura, limpieza, seguridad, ruidos, arbolado, pluvial, otro]
+                direccion: { type: string, example: "Av. Rivadavia 1234" }
+                coordenadas: { type: string, example: "-34.6037, -58.3816" }
+                comuna: { type: string, example: "Comuna 5" }
+                descripcion: { type: string, maxLength: 500 }
+                foto:
+                  type: string
+                  format: binary
+                  description: Imagen opcional (.jpg, .jpeg, .png, .webp — máx. 10 MB)
+      responses:
+        '201':
+          description: Reporte creado
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ReportResponse' }
+        '400':
+          description: Error de validación
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        '429':
+          description: Límite de creación de reportes excedido (15/hora por IP)
+
+    get:
+      tags: [Reportes]
+      summary: Listar reportes con filtros y paginación
+      parameters:
+        - name: search
+          in: query
+          schema: { type: string }
+          description: Búsqueda por código o DNI
+        - name: type
+          in: query
+          schema: { type: string }
+        - name: status
+          in: query
+          schema: { type: string }
+        - name: sort
+          in: query
+          schema: { type: string }
+        - name: page
+          in: query
+          schema: { type: integer, default: 1 }
+        - name: limit
+          in: query
+          schema: { type: integer, default: 10 }
+      responses:
+        '200':
+          description: Listado paginado de reportes (datos personales enmascarados si no hay token)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ReportListResponse' }
+
+  /reports/export/csv:
+    get:
+      tags: [Reportes]
+      summary: Exportar el listado completo de reportes en formato CSV
+      responses:
+        '200':
+          description: Archivo CSV
+          content:
+            text/csv:
+              schema: { type: string, format: binary }
+
+  /reports/{code}:
+    get:
+      tags: [Reportes]
+      summary: Obtener el detalle de un reporte por su código (#REP-YYYY-XXXX)
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema: { type: string, example: "REP-2024-8942" }
+      responses:
+        '200':
+          description: Detalle del reporte, con su bitácora (report_logs) y testimonios (comments)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ReportDetailResponse' }
+        '404':
+          description: Reporte no encontrado
+
+    delete:
+      tags: [Reportes]
+      summary: Eliminar un reporte (solo administradores)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Reporte eliminado }
+        '401': { description: Token ausente o inválido }
+        '403': { description: Rol insuficiente (requiere admin) }
+
+  /reports/{code}/status:
+    patch:
+      tags: [Reportes]
+      summary: Actualizar estado operativo y cuadrilla asignada (operador/admin)
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [estado]
+              properties:
+                estado:
+                  type: string
+                  enum: [pendiente, en_revision, en_proceso, resuelto]
+                cuadrilla_asignada: { type: string }
+                tiempo_estimado: { type: string }
+                acta_numero: { type: string }
+      responses:
+        '200': { description: Estado actualizado }
+        '400': { description: Estado no válido }
+        '401': { description: Token ausente o inválido }
+        '403': { description: Rol insuficiente (requiere admin u operador) }
+
+  /reports/{code}/comments:
+    post:
+      tags: [Comentarios]
+      summary: Agregar un testimonio o aporte vecinal a un reporte
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [autor, contenido]
+              properties:
+                autor: { type: string }
+                contenido: { type: string, maxLength: 250 }
+      responses:
+        '201': { description: Comentario agregado }
+        '400': { description: Error de validación }
+        '429': { description: Límite de comentarios excedido (20/15min por IP) }
+
+  /auth/login:
+    post:
+      tags: [Autenticación]
+      summary: Iniciar sesión (operador/admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [username, password]
+              properties:
+                username: { type: string, example: "admin" }
+                password: { type: string, format: password, example: "Admin@Civic2024!" }
+      responses:
+        '200':
+          description: Login exitoso, devuelve JWT (expira en 8 horas)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string, example: success }
+                  token: { type: string }
+                  user: { $ref: '#/components/schemas/User' }
+        '401': { description: Credenciales inválidas }
+        '429': { description: Demasiados intentos (5/15min por IP) }
+
+  /auth/me:
+    get:
+      tags: [Autenticación]
+      summary: Perfil del usuario autenticado
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200':
+          description: Datos del usuario
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/User' }
+        '401': { description: Token ausente o inválido }
+
+  /stats:
+    get:
+      tags: [Estadísticas]
+      summary: Métricas comunales en tiempo real (total, pendientes, en cuadrilla, efectividad)
+      responses:
+        '200':
+          description: Métricas agregadas
+          content:
+            application/json:
+              schema: { type: object }
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    User:
+      type: object
+      properties:
+        id: { type: integer }
+        username: { type: string }
+        full_name: { type: string }
+        role: { type: string, enum: [admin, operador, tecnico] }
+        area: { type: string }
+    Report:
+      type: object
+      properties:
+        id: { type: integer }
+        code: { type: string, example: "REP-2024-8942" }
+        nombre_apellido: { type: string }
+        dni: { type: string, description: "Enmascarado (***.891) si la petición no está autenticada" }
+        tipo_incidente: { type: string }
+        direccion: { type: string }
+        comuna: { type: string }
+        descripcion: { type: string }
+        foto_url: { type: string, nullable: true }
+        estado: { type: string, enum: [pendiente, en_revision, en_proceso, resuelto] }
+        prioridad: { type: string, enum: [baja, media, alta, urgente] }
+        cuadrilla_asignada: { type: string, nullable: true }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+    ReportResponse:
+      type: object
+      properties:
+        status: { type: string, example: success }
+        message: { type: string }
+        data: { $ref: '#/components/schemas/Report' }
+    ReportListResponse:
+      type: object
+      properties:
+        status: { type: string, example: success }
+        data:
+          type: array
+          items: { $ref: '#/components/schemas/Report' }
+        pagination:
+          type: object
+          properties:
+            page: { type: integer }
+            limit: { type: integer }
+            total: { type: integer }
+    ReportDetailResponse:
+      type: object
+      properties:
+        status: { type: string, example: success }
+        data:
+          allOf:
+            - $ref: '#/components/schemas/Report'
+            - type: object
+              properties:
+                logs:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      etapa: { type: string }
+                      etiqueta_estado: { type: string }
+                      descripcion: { type: string }
+                      responsable: { type: string }
+                      created_at: { type: string, format: date-time }
+                comments:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      autor: { type: string }
+                      contenido: { type: string }
+                      created_at: { type: string, format: date-time }
+    ErrorResponse:
+      type: object
+      properties:
+        status: { type: string, example: error }
+        message: { type: string }
+        errors:
+          type: array
+          items: { type: string }

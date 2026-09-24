@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Sistema Oficial de Reportes Barriales | Gobierno Municipal</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+      main > :first-child { margin-top: 0 !important; }
+      main > :last-child { margin-bottom: 0 !important; }
+    }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-tertiary-fixed-variant": "#653e00",
+            "primary-fixed-dim": "#ffb4ab",
+            "on-surface": "#0b1c30",
+            "error-container": "#ffdad6",
+            "inverse-surface": "#213145",
+            "surface-container": "#e5eeff",
+            "error": "#ba1a1a",
+            "secondary-fixed": "#d8e3fb",
+            "surface-bright": "#f8f9ff",
+            "surface": "#f8f9ff",
+            "inverse-on-surface": "#eaf1ff",
+            "surface-dim": "#cbdbf5",
+            "tertiary-fixed-dim": "#ffb95f",
+            "inverse-primary": "#ffb4ab",
+            "on-primary-fixed-variant": "#93000b",
+            "on-tertiary-fixed": "#2a1700",
+            "primary-fixed": "#ffdad6",
+            "surface-container-highest": "#d3e4fe",
+            "on-background": "#0b1c30",
+            "on-tertiary-container": "#fff7f1",
+            "on-error-container": "#93000a",
+            "on-secondary": "#ffffff",
+            "secondary-fixed-dim": "#bcc7de",
+            "tertiary-container": "#a06500",
+            "outline-variant": "#e6bdb8",
+            "on-secondary-container": "#586377",
+            "on-error": "#ffffff",
+            "surface-variant": "#d3e4fe",
+            "tertiary-fixed": "#ffddb8",
+            "surface-container-lowest": "#ffffff",
+            "outline": "#916f6b",
+            "secondary": "#545f73",
+            "on-tertiary": "#ffffff",
+            "surface-container-low": "#eff4ff",
+            "primary-container": "#dc2626",
+            "on-primary-fixed": "#410002",
+            "tertiary": "#7f4f00",
+            "on-secondary-fixed-variant": "#3c475a",
+            "primary": "#b70011",
+            "on-secondary-fixed": "#111c2d",
+            "surface-tint": "#bf0715",
+            "background": "#f8f9ff",
+            "on-primary-container": "#fff6f5",
+            "surface-container-high": "#dce9ff",
+            "on-surface-variant": "#5c403c",
+            "secondary-container": "#d5e0f8",
+            "on-primary": "#ffffff"
+          },
+          borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+          spacing: { "space-lg": "1.5rem", "margin-sm": "1rem", "gutter": "1.5rem", "space-md": "1rem", "space-xl": "2.5rem", "margin": "2rem", "space-sm": "0.5rem", "space-xs": "0.25rem", "gutter-sm": "1rem" },
+          fontFamily: {
+            "headline-xl": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"],
+            "display-lg": ["Plus Jakarta Sans"], "label-lg": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"],
+            "display-lg-mobile": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"],
+            "label-sm": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "headline-xl-mobile": ["Plus Jakarta Sans"],
+            "headline-lg": ["Plus Jakarta Sans"]
+          },
+          fontSize: {
+            "headline-xl": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.015em", "fontWeight": "700" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+            "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "headline-sm": ["18px", { "lineHeight": "26px", "fontWeight": "600" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "700" }],
+            "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-surface font-body-md text-body-md text-on-surface min-h-screen">
+
+  <!-- HEADER OFICIAL CIUDADANO -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest border-b border-surface-container shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+    <div class="h-20 max-w-7xl mx-auto px-gutter flex items-center justify-between gap-space-md">
+      <div class="flex items-center gap-space-md">
+        <a class="flex items-center gap-space-sm" data-path="inicio" href="index.html">
+          <img alt="Logo Reportes Barriales" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4_hMaoMPtiJF31FvJFy2Mh3TXYkmxqcSN1iqLZyfD4AQSmra39aEI0XFjyTO6gIO14qG8flRkGM5w9BORq3wgJt1SfACfQ-jI7DjDdUei9aSPN6B2UnAuweIUGWkKyaGsH00sES7j-NapRn909JaMHeqOj7F5n5W9RohgJd_oi3SnhsuMttgubu-tloJ_697WqAG1TftXn99Ui6n74Su1_iMZLPaBsbKFFTEBvTmbq9yw1gJQPOg"/>
+          <div class="flex flex-col">
+            <span class="font-headline-sm text-headline-sm text-on-surface leading-none tracking-tight">Reportes Barriales</span>
+            <span class="font-label-sm text-label-sm text-secondary leading-none mt-1 uppercase tracking-wider">Gobierno Municipal</span>
+          </div>
+        </a>
+        <span class="hidden lg:inline-flex items-center px-space-sm py-0.5 rounded-full bg-surface-container text-on-secondary-container font-label-sm text-label-sm">
+          Participación Ciudadana
+        </span>
+      </div>
+
+      <!-- Menú de Navegación Principal -->
+      <nav class="hidden md:flex items-center gap-space-xs" data-active-classes="bg-surface-container-low text-on-surface font-label-lg rounded-lg">
+        <a class="px-space-sm py-space-xs text-on-surface-variant hover:text-on-surface font-label-lg text-label-lg transition-colors" data-path="inicio" href="index.html">Inicio</a>
+        <a aria-current="page" class="px-space-sm py-space-xs transition-colors bg-surface-container-low text-on-surface font-label-lg rounded-lg" data-path="nuevo-reporte" href="#formulario-reporte">Nuevo reporte</a>
+        <a class="px-space-sm py-space-xs text-on-surface-variant hover:text-on-surface font-label-lg text-label-lg transition-colors" data-path="mis-reportes" href="reportes.html">Mis reportes</a>
+        <a class="px-space-sm py-space-xs text-on-surface-variant hover:text-on-surface font-label-lg text-label-lg transition-colors" data-path="seguimiento" href="seguimiento.html">Seguimiento</a>
+        <!-- Enlace Contacto con scroll suave -->
+        <a class="px-space-sm py-space-xs text-on-surface-variant hover:text-on-surface font-label-lg text-label-lg transition-colors cursor-pointer" data-path="contacto" href="#contacto" onclick="scrollToContact(event)">Contacto</a>
+      </nav>
+
+      <!-- Acciones de Cabecera -->
+      <div class="flex items-center gap-space-sm">
+        <div class="hidden xl:flex items-center gap-space-xs px-space-sm py-space-xs bg-surface-container-low rounded-lg">
+          <span class="material-symbols-outlined text-primary text-[18px]">phone_in_talk</span>
+          <div class="flex flex-col">
+            <span class="font-label-sm text-label-sm text-on-surface-variant leading-none">Línea Vecinal</span>
+            <a href="tel:147" class="font-label-md text-label-md text-on-surface font-bold leading-none hover:text-primary">147</a>
+          </div>
+        </div>
+
+        <a class="inline-flex items-center gap-space-xs px-space-md h-10 rounded-lg bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg shadow-sm transition-colors cursor-pointer" href="#formulario-reporte">
+          <span class="material-symbols-outlined text-[20px]">add_circle</span>
+          <span>Crear Reporte</span>
+        </a>
+
+        <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0">
+          <span class="material-symbols-outlined text-on-primary text-[18px]">person</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="w-full pt-20 bg-surface min-h-[calc(100vh-20rem)]">
+    <div class="flex flex-col w-full">
+      <!-- Atmósfera Cívica Superior -->
+      <div class="relative w-full bg-gradient-to-b from-surface-container-low via-surface-container-lowest to-surface-container-lowest overflow-hidden pb-12 pt-8">
+        <div class="absolute -right-24 -top-24 w-96 h-96 bg-primary-container/5 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-20 top-40 w-80 h-80 bg-secondary-container/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="max-w-7xl mx-auto px-gutter relative z-10">
+          <div class="inline-flex items-center gap-space-xs px-space-sm py-1 rounded-full bg-surface-container-highest/80 text-on-surface mb-6 shadow-sm">
+            <span class="inline-block w-2.5 h-2.5 rounded-full bg-primary-container animate-pulse"></span>
+            <span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary">Canal Oficial de Gestión Directa</span>
+            <span class="text-secondary/40 font-body-sm text-body-sm">•</span>
+            <span class="font-label-sm text-label-sm text-on-surface font-medium">Circunscripción Urbana 2024</span>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-center">
+            <!-- Columna de Texto Hero -->
+            <div class="lg:col-span-7 space-y-space-md">
+              <h1 class="font-display-lg text-display-lg text-on-surface tracking-tight leading-tight">
+                Tu voz mejora <br/>
+                <span class="text-primary-container inline-block relative">
+                  nuestro barrio
+                  <svg class="absolute -bottom-2 left-0 w-full h-2 text-primary-container/20" fill="none" preserveaspectratio="none" viewbox="0 0 200 8">
+                    <path d="M0 6C50 1 150 1 200 6" stroke="currentColor" stroke-linecap="round" stroke-width="4"></path>
+                  </svg>
+                </span>
+              </h1>
+              <p class="font-body-lg text-body-lg text-secondary max-w-2xl">
+                Colaborá activamente para solucionar luminarias rotas, baches, ruidos molestos, acumulación indebida de residuos o emergencias vecinales. Tu reporte se almacena de inmediato en la base de datos municipal y se asigna a la cuadrilla comunal correspondiente.
+              </p>
+
+              <!-- Acciones Rápidas -->
+              <div class="flex flex-wrap items-center gap-space-sm pt-2">
+                <a class="inline-flex items-center gap-space-xs px-space-lg h-12 rounded-lg bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg shadow-md hover:shadow-lg transition-all transform active:scale-95" href="#formulario-reporte">
+                  <span class="material-symbols-outlined text-[20px]">campaign</span>
+                  <span>Iniciar reporte ahora</span>
+                </a>
+                <a class="inline-flex items-center gap-space-xs px-space-lg h-12 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high font-label-lg text-label-lg transition-colors" data-path="seguimiento" href="seguimiento.html">
+                  <span class="material-symbols-outlined text-secondary text-[20px]">search</span>
+                  <span>Consultar estado de mi reporte</span>
+                </a>
+              </div>
+
+              <!-- Métricas Rápidas -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-space-sm pt-6">
+                <div class="p-space-sm bg-surface-container-lowest rounded-xl shadow-sm flex items-center gap-space-sm">
+                  <div class="w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center shrink-0 text-primary-container">
+                    <span class="material-symbols-outlined text-[22px]">task_alt</span>
+                  </div>
+                  <div>
+                    <p class="font-headline-sm text-headline-sm text-on-surface leading-none font-bold">4.280+</p>
+                    <p class="font-label-sm text-label-sm text-secondary mt-1">Casos resueltos este año</p>
+                  </div>
+                </div>
+                <div class="p-space-sm bg-surface-container-lowest rounded-xl shadow-sm flex items-center gap-space-sm">
+                  <div class="w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center shrink-0 text-tertiary">
+                    <span class="material-symbols-outlined text-[22px]">timer</span>
+                  </div>
+                  <div>
+                    <p class="font-headline-sm text-headline-sm text-on-surface leading-none font-bold">&lt; 48 hs</p>
+                    <p class="font-label-sm text-label-sm text-secondary mt-1">Respuesta media comunal</p>
+                  </div>
+                </div>
+                <div class="p-space-sm bg-surface-container-lowest rounded-xl shadow-sm flex items-center gap-space-sm">
+                  <div class="w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center shrink-0 text-primary">
+                    <span class="material-symbols-outlined text-[22px]">account_balance</span>
+                  </div>
+                  <div>
+                    <p class="font-headline-sm text-headline-sm text-on-surface leading-none font-bold">100%</p>
+                    <p class="font-label-sm text-label-sm text-secondary mt-1">Atención municipal directa</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Centro de Cuadrillas en Vivo Showcase -->
+            <div class="lg:col-span-5 relative mt-6 lg:mt-0">
+              <div class="relative bg-surface-container-lowest rounded-2xl p-space-md shadow-xl overflow-hidden border border-surface-container">
+                <div class="flex items-center justify-between pb-space-sm border-b border-surface-container">
+                  <div class="flex items-center gap-space-xs">
+                    <span class="inline-flex w-3 h-3 rounded-full bg-error animate-ping"></span>
+                    <span class="font-label-md text-label-md text-on-surface font-bold">Centro de Cuadrillas en Vivo</span>
+                  </div>
+                  <span class="font-label-sm text-label-sm bg-surface-container-low text-secondary px-2.5 py-1 rounded-full">Activas: 14</span>
+                </div>
+                <div class="space-y-3 mt-4">
+                  <div class="p-space-sm rounded-xl bg-surface-container-low flex items-start gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-error-container text-on-error-container flex items-center justify-center shrink-0">
+                      <span class="material-symbols-outlined text-[18px]">lightbulb</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <div class="flex items-center justify-between">
+                        <p class="font-label-md text-label-md text-on-surface font-semibold truncate">Luminaria Intermitente</p>
+                        <span class="font-label-sm text-label-sm text-primary font-bold">En camino</span>
+                      </div>
+                      <p class="font-body-sm text-body-sm text-secondary truncate">Plaza España - Sector Juegos</p>
+                    </div>
+                  </div>
+                  <div class="p-space-sm rounded-xl bg-surface-container-low flex items-start gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-secondary-container text-on-secondary-container flex items-center justify-center shrink-0">
+                      <span class="material-symbols-outlined text-[18px]">construction</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <div class="flex items-center justify-between">
+                        <p class="font-label-md text-label-md text-on-surface font-semibold truncate">Bacheo y Reasfaltado</p>
+                        <span class="font-label-sm text-label-sm text-secondary font-bold">Inspección hoy</span>
+                      </div>
+                      <p class="font-body-sm text-body-sm text-secondary truncate">Av. de los Pioneros 3400</p>
+                    </div>
+                  </div>
+                  <div class="p-space-sm rounded-xl bg-surface-container-low flex items-start gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-surface-container-high text-on-surface-variant flex items-center justify-center shrink-0">
+                      <span class="material-symbols-outlined text-[18px]">delete_sweep</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <div class="flex items-center justify-between">
+                        <p class="font-label-md text-label-md text-on-surface font-semibold truncate">Residuos de Poda</p>
+                        <span class="font-label-sm text-label-sm text-tertiary font-bold">Programado 16 hs</span>
+                      </div>
+                      <p class="font-body-sm text-body-sm text-secondary truncate">Calle Las Magnolias 890</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-4 pt-3 border-t border-surface-container flex items-center justify-between">
+                  <span class="font-body-sm text-body-sm text-secondary">Trazabilidad pública verificada</span>
+                  <span class="inline-flex items-center gap-1 font-label-sm text-label-sm text-primary font-semibold">
+                    <span class="material-symbols-outlined text-[16px]">verified</span>
+                    Auditoría Ciudadana
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECCIÓN DEL FORMULARIO DE REPORTE -->
+      <section class="max-w-4xl mx-auto px-gutter w-full py-10 scroll-mt-24" id="formulario-reporte">
+        <!-- Modal de Éxito Interactivo -->
+        <div class="hidden mb-8 p-6 bg-surface-container-lowest rounded-2xl shadow-xl transition-all border border-surface-container relative overflow-hidden" id="modal-exito">
+          <div class="absolute -top-10 -right-10 w-32 h-32 bg-primary-container/10 rounded-full blur-xl"></div>
+          <div class="flex flex-col sm:flex-row items-start sm:items-center gap-space-md">
+            <div class="w-14 h-14 rounded-2xl bg-surface-container flex items-center justify-center shrink-0 text-primary-container">
+              <span class="material-symbols-outlined text-[36px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex flex-wrap items-center gap-2 mb-1">
+                <span class="px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface font-label-sm text-label-sm font-semibold">Registro Confirmado en SQL</span>
+                <span class="text-secondary font-body-sm text-body-sm" id="fecha-confirmacion">Hoy</span>
+              </div>
+              <h3 class="font-headline-md text-headline-md text-on-surface font-bold">¡Tu reporte fue recibido y guardado con éxito!</h3>
+              <p class="font-body-md text-body-md text-secondary mt-1">
+                Ha sido ingresado en la base de datos municipal y transmitido a la cuadrilla distrital. Tu código único de seguimiento es:
+              </p>
+              <div class="mt-3 inline-flex items-center gap-space-sm p-space-xs px-space-sm bg-surface-container-low rounded-lg">
+                <span class="font-headline-sm text-headline-sm text-primary-container font-mono tracking-widest font-extrabold" id="report-code-badge">#REP-2024-XXXX</span>
+                <button class="p-1 rounded hover:bg-surface-container-high text-secondary hover:text-on-surface transition-colors cursor-pointer" onclick="copyReportCode()" title="Copiar código" type="button">
+                  <span class="material-symbols-outlined text-[18px]">content_copy</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-wrap items-center gap-space-sm mt-6 pt-4 border-t border-surface-container justify-end">
+            <button class="px-space-md h-10 rounded-lg bg-surface-container-high text-on-surface font-label-md text-label-md hover:bg-surface-container transition-colors inline-flex items-center gap-1.5 cursor-pointer" onclick="copyReportCode()" type="button">
+              <span class="material-symbols-outlined text-[18px]">copy_all</span>
+              <span id="btn-copiar-texto">Copiar código</span>
+            </button>
+            <button class="px-space-md h-10 rounded-lg bg-surface-container text-on-surface font-label-md text-label-md hover:bg-surface-container-high transition-colors inline-flex items-center gap-1.5 cursor-pointer" onclick="resetFormForNewReport()" type="button">
+              <span class="material-symbols-outlined text-[18px]">add</span>
+              <span>Registrar otro reporte</span>
+            </button>
+            <a id="btn-ir-seguimiento" class="px-space-md h-10 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md hover:bg-primary transition-colors inline-flex items-center gap-1.5 shadow-sm" data-path="seguimiento" href="seguimiento.html">
+              <span class="material-symbols-outlined text-[18px]">near_me</span>
+              <span>Hacer seguimiento en tiempo real</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Tarjeta Principal del Formulario -->
+        <div class="bg-surface-container-lowest rounded-2xl shadow-xl p-6 sm:p-10 relative border border-surface-container">
+          <div class="mb-8 pb-6 border-b border-surface-container flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <span class="font-label-sm text-label-sm uppercase tracking-wider text-primary-container font-bold">Formulario Oficial</span>
+              <h2 class="font-headline-xl text-headline-xl text-on-surface font-extrabold tracking-tight mt-1">Nuevo Reporte de Incidente</h2>
+              <p class="font-body-md text-body-md text-secondary mt-1">Completá los datos requeridos. Toda la información suministrada posee carácter de declaración vecinal y se almacena directamente en la base de datos comunal.</p>
+            </div>
+            <div class="shrink-0 flex items-center gap-2 bg-surface-container-low px-3 py-2 rounded-xl">
+              <span class="material-symbols-outlined text-primary-container text-[20px]">shield</span>
+              <div class="text-left">
+                <p class="font-label-sm text-label-sm text-on-surface font-bold leading-none">Datos Protegidos</p>
+                <p class="font-body-sm text-body-sm text-secondary leading-none mt-1">Ley de Transparencia 25.326</p>
+              </div>
+            </div>
+          </div>
+
+          <form class="space-y-10" id="incidentForm" onsubmit="handleSubmit(event)">
+            <!-- SECCIÓN 1: Datos del Solicitante -->
+            <div class="space-y-space-md">
+              <div class="flex items-center gap-space-xs">
+                <span class="w-6 h-6 rounded-full bg-primary-container text-on-primary font-label-sm text-label-sm flex items-center justify-center font-bold">1</span>
+                <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Datos del Solicitante</h3>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-12 gap-space-md">
+                <!-- Nombre y Apellido -->
+                <div class="sm:col-span-6 space-y-1.5">
+                  <label class="font-label-md text-label-md text-on-surface flex items-center gap-1" for="nombreApellido">
+                    Nombre y Apellido <span class="text-primary-container font-bold">*</span>
+                  </label>
+                  <div class="relative">
+                    <input class="w-full h-11 px-3.5 bg-surface-container-lowest text-on-surface rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-container/40 focus:border-primary-container text-body-md font-body-md border border-surface-container" id="nombreApellido" placeholder="Ej: Marcelo Alberto Ramos" required type="text"/>
+                  </div>
+                </div>
+
+                <!-- DNI -->
+                <div class="sm:col-span-6 space-y-1.5">
+                  <label class="font-label-md text-label-md text-on-surface flex items-center gap-1" for="dniSolicitante">
+                    DNI del solicitante <span class="text-primary-container font-bold">*</span>
+                  </label>
+                  <div class="relative">
+                    <input class="w-full h-11 px-3.5 bg-surface-container-lowest text-on-surface rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-container/40 focus:border-primary-container text-body-md font-body-md border border-surface-container" id="dniSolicitante" maxlength="10" oninput="formatDNI(this)" placeholder="Ej: 34.567.890" required type="text"/>
+                    <span class="absolute right-3 top-3 text-secondary">
+                      <span class="material-symbols-outlined text-[20px]">badge</span>
+                    </span>
+                  </div>
+                  <p class="font-body-sm text-body-sm text-secondary">Identificación para comprobación en padrón vecinal (7 u 8 dígitos).</p>
+                </div>
+
+                <!-- Contacto -->
+                <div class="sm:col-span-12 space-y-1.5">
+                  <label class="font-label-md text-label-md text-on-surface flex items-center justify-between" for="contacto">
+                    <span>Teléfono o Correo Electrónico</span>
+                    <span class="font-label-sm text-label-sm text-secondary font-normal">Opcional para avisos de avance</span>
+                  </label>
+                  <div class="relative">
+                    <input class="w-full h-11 px-3.5 bg-surface-container-lowest text-on-surface rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-container/40 focus:border-primary-container text-body-md font-body-md border border-surface-container" id="contactoInput" placeholder="Ej: 11 4455-8899 o vecino@correo.com" type="text"/>
+                    <span class="absolute right-3 top-3 text-secondary">
+                      <span class="material-symbols-outlined text-[20px]">alternate_email</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SECCIÓN 2: Detalles del Incidente -->
+            <div class="space-y-space-md pt-4 border-t border-surface-container">
+              <div class="flex items-center gap-space-xs">
+                <span class="w-6 h-6 rounded-full bg-primary-container text-on-primary font-label-sm text-label-sm flex items-center justify-center font-bold">2</span>
+                <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Detalles del Incidente</h3>
+              </div>
+
+              <!-- Selector de Tipología con Tarjetas -->
+              <div class="space-y-2">
+                <label class="font-label-md text-label-md text-on-surface flex items-center gap-1">
+                  Tipo de incidente <span class="text-primary-container font-bold">*</span>
+                </label>
+                <input id="tipoIncidenteInput" name="tipoIncidente" required type="hidden" value="alumbrado"/>
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-space-sm" id="tipoIncidenteGrid">
+                  <button class="tipo-btn p-3 rounded-xl bg-surface-container-low text-left transition-all flex flex-col justify-between h-24 ring-2 ring-primary-container shadow-sm cursor-pointer" onclick="selectType('alumbrado', this)" type="button">
+                    <div class="w-8 h-8 rounded-lg bg-surface-container-lowest text-primary-container flex items-center justify-center">
+                      <span class="material-symbols-outlined text-[20px]">lightbulb</span>
+                    </div>
+                    <span class="font-label-md text-label-md text-on-surface font-bold">Alumbrado público</span>
+                  </button>
+                  <button class="tipo-btn p-3 rounded-xl bg-surface-container-low text-left transition-all flex flex-col justify-between h-24 hover:bg-surface-container cursor-pointer" onclick="selectType('infraestructura', this)" type="button">
+                    <div class="w-8 h-8 rounded-lg bg-surface-container-lowest text-secondary flex items-center justify-center">
+                      <span class="material-symbols-outlined text-[20px]">remove_road</span>
+                    </div>
+                    <span class="font-label-md text-label-md text-on-surface font-semibold">Baches y calzadas</span>
+                  </button>
+                  <button class="tipo-btn p-3 rounded-xl bg-surface-container-low text-left transition-all flex flex-col justify-between h-24 hover:bg-surface-container cursor-pointer" onclick="selectType('limpieza', this)" type="button">
+                    <div class="w-8 h-8 rounded-lg bg-surface-container-lowest text-secondary flex items-center justify-center">
+                      <span class="material-symbols-outlined text-[20px]">delete</span>
+                    </div>
+                    <span class="font-label-md text-label-md text-on-surface font-semibold">Limpieza y basurales</span>
+                  </button>
+                  <button class="tipo-btn p-3 rounded-xl bg-surface-container-low text-left transition-all flex flex-col justify-between h-24 hover:bg-surface-container cursor-pointer" onclick="selectType('seguridad', this)" type="button">
+                    <div class="w-8 h-8 rounded-lg bg-surface-container-lowest text-secondary flex items-center justify-center">
+                      <span class="material-symbols-outlined text-[20px]">local_police</span>
+                    </div>
+                    <span class="font-label-md text-label-md text-on-surface font-semibold">Seguridad barrial</span>
+                  </button>
+                  <button class="tipo-btn p-3 rounded-xl bg-surface-container-low text-left transition-all flex flex-col justify-between h-24 hover:bg-surface-container cursor-pointer" onclick="selectType('ruidos', this)" type="button">
+                    <div class="w-8 h-8 rounded-lg bg-surface-container-lowest text-secondary flex items-center justify-center">
+                      <span class="material-symbols-outlined text-[20px]">volume_up</span>
+                    </div>
+                    <span class="font-label-md text-label-md text-on-surface font-semibold">Ruidos molestos</span>
+                  </button>
+                  <button class="tipo-btn p-3 rounded-xl bg-surface-container-low text-left transition-all flex flex-col justify-between h-24 hover:bg-surface-container cursor-pointer" onclick="selectType('arbolado', this)" type="button">
+                    <div class="w-8 h-8 rounded-lg bg-surface-container-lowest text-secondary flex items-center justify-center">
+                      <span class="material-symbols-outlined text-[20px]">park</span>
+                    </div>
+                    <span class="font-label-md text-label-md text-on-surface font-semibold">Arbolado / Plazas</span>
+                  </button>
+                  <button class="tipo-btn p-3 rounded-xl bg-surface-container-low text-left transition-all flex flex-col justify-between h-24 hover:bg-surface-container cursor-pointer" onclick="selectType('pluvial', this)" type="button">
+                    <div class="w-8 h-8 rounded-lg bg-surface-container-lowest text-secondary flex items-center justify-center">
+                      <span class="material-symbols-outlined text-[20px]">water_damage</span>
+                    </div>
+                    <span class="font-label-md text-label-md text-on-surface font-semibold">Sumideros y desagües</span>
+                  </button>
+                  <button class="tipo-btn p-3 rounded-xl bg-surface-container-low text-left transition-all flex flex-col justify-between h-24 hover:bg-surface-container cursor-pointer" onclick="selectType('otro', this)" type="button">
+                    <div class="w-8 h-8 rounded-lg bg-surface-container-lowest text-secondary flex items-center justify-center">
+                      <span class="material-symbols-outlined text-[20px]">more_horiz</span>
+                    </div>
+                    <span class="font-label-md text-label-md text-on-surface font-semibold">Otros reclamos</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Ubicación y Mapa Interactivo con GOOGLE MAPS -->
+              <div class="space-y-2 pt-2">
+                <label class="font-label-md text-label-md text-on-surface flex items-center justify-between" for="direccionIncidente">
+                  <span class="flex items-center gap-1">Dirección exacta o intersección <span class="text-primary-container font-bold">*</span></span>
+                  <span class="font-label-sm text-label-sm text-secondary">Asociado en vivo a Google Maps</span>
+                </label>
+                <div class="flex flex-col sm:flex-row gap-2">
+                  <div class="relative flex-1">
+                    <input class="w-full h-11 px-3.5 pl-10 bg-surface-container-lowest text-on-surface rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-container/40 focus:border-primary-container text-body-md font-body-md border border-surface-container" id="direccionIncidente" oninput="debounceUpdateMap(this.value)" placeholder="Ingresá la calle y número (ej: Av. Rivadavia 4500, Corrientes 3820...)" required type="text"/>
+                    <span class="absolute left-3 top-3 text-primary-container">
+                      <span class="material-symbols-outlined text-[20px]">location_on</span>
+                    </span>
+                  </div>
+                  <button class="px-space-md h-11 rounded-lg bg-surface-container-high hover:bg-surface-container text-on-surface font-label-md text-label-md flex items-center justify-center gap-2 transition-colors shrink-0 cursor-pointer" onclick="syncMapWithAddress()" type="button">
+                    <span class="material-symbols-outlined text-primary-container text-[20px]">map</span>
+                    <span>Buscar en el mapa</span>
+                  </button>
+                </div>
+
+                <!-- Input oculto para coordenadas -->
+                <input type="hidden" id="coordenadasInput" value="-34.6037, -58.3816" />
+
+                <!-- Visor Interactivo de Google Maps Integrado -->
+                <div class="relative w-full h-80 rounded-2xl overflow-hidden shadow-sm mt-3 border border-surface-container bg-surface-container">
+                  <iframe id="gmap-frame" class="w-full h-full border-0"
+                    src="https://maps.google.com/maps?q=Buenos+Aires,+Argentina&t=&z=14&ie=UTF8&iwloc=&output=embed"
+                    loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+                  <!-- HUD Inferior con Enlace Directo a Google Maps -->
+                  <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between bg-surface-container-lowest/95 backdrop-blur-sm px-3.5 py-2.5 rounded-xl shadow-md border border-surface-container">
+                    <div class="flex items-center gap-2 text-on-surface truncate">
+                      <span class="material-symbols-outlined text-primary-container text-[18px] shrink-0">pin_drop</span>
+                      <span id="map-address-hud" class="font-label-sm text-label-sm font-semibold truncate">Escribe una dirección para ubicarla en el mapa</span>
+                    </div>
+                    <a id="btn-open-gmaps" href="https://www.google.com/maps/search/?api=1&query=Buenos+Aires" target="_blank" class="font-label-sm text-label-sm text-primary font-bold hover:underline inline-flex items-center gap-1 shrink-0 ml-2">
+                      <span>Abrir en Google Maps</span>
+                      <span class="material-symbols-outlined text-[14px]">open_in_new</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Selector de Prioridad / Nivel de Urgencia -->
+              <div class="space-y-1.5 pt-2">
+                <label class="font-label-md text-label-md text-on-surface flex items-center gap-1" for="prioridadIncidente">
+                  Nivel de Urgencia / Impacto
+                </label>
+                <select id="prioridadIncidente" class="w-full h-11 px-3.5 bg-surface-container-lowest text-on-surface rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-container/40 focus:border-primary-container text-body-md font-body-md border border-surface-container">
+                  <option value="media" selected>Prioridad Media (Mantenimiento barrial regular)</option>
+                  <option value="alta">Prioridad Alta (Afecta la transitabilidad o iluminación)</option>
+                  <option value="urgente">Urgente / Riesgo Inminente (Peligro vial o peatonal grave)</option>
+                  <option value="baja">Prioridad Baja (Mantenimiento programable)</option>
+                </select>
+              </div>
+
+              <!-- Descripción del incidente -->
+              <div class="space-y-1.5 pt-2">
+                <div class="flex items-center justify-between">
+                  <label class="font-label-md text-label-md text-on-surface flex items-center gap-1" for="descripcionIncidente">
+                    Descripción / Informe detallado <span class="text-primary-container font-bold">*</span>
+                  </label>
+                  <span class="font-label-sm text-label-sm text-secondary" id="charCount">0 / 500</span>
+                </div>
+                <textarea class="w-full p-3.5 bg-surface-container-lowest text-on-surface rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-container/40 focus:border-primary-container text-body-md font-body-md border border-surface-container resize-none" id="descripcionIncidente" maxlength="500" oninput="updateCharCount(this)" placeholder="Describí el incidente con el mayor detalle posible: qué ocurrió, cuándo, si representa un peligro inminente y cualquier información relevante que ayude a la cuadrilla..." required rows="4"></textarea>
+                <p class="font-body-sm text-body-sm text-secondary">Aclarar si afecta el tránsito peatonal o vehicular.</p>
+              </div>
+
+            </div>
+
+            <!-- SECCIÓN 3: Declaración y Envío -->
+            <div class="pt-6 border-t border-surface-container space-y-4">
+              <div class="flex items-center gap-space-xs mb-2">
+                <span class="w-6 h-6 rounded-full bg-primary-container text-on-primary font-label-sm text-label-sm flex items-center justify-center font-bold">3</span>
+                <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Declaración y Confirmación</h3>
+              </div>
+              <label class="flex items-start gap-3 cursor-pointer">
+                <input checked class="mt-1 w-4 h-4 rounded text-primary-container focus:ring-primary-container accent-primary-container" required type="checkbox"/>
+                <span class="font-body-sm text-body-sm text-secondary leading-normal">
+                  Declaro bajo fe de veracidad que el reclamo ingresado corresponde a un problema verídico en la vía pública y acepto ser notificado ante novedades del personal técnico comunal.
+                </span>
+              </label>
+              <div class="flex flex-col sm:flex-row items-center justify-end gap-space-sm pt-2">
+                <button class="w-full sm:w-auto px-space-md h-12 rounded-lg text-secondary hover:text-on-surface hover:bg-surface-container-low font-label-lg text-label-lg transition-colors cursor-pointer" type="button" onclick="resetFormForNewReport()">
+                  Limpiar formulario
+                </button>
+                <button class="w-full sm:w-auto px-8 h-12 rounded-lg bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 transform active:scale-98 cursor-pointer" type="submit">
+                  <span class="material-symbols-outlined text-[22px]">send</span>
+                  <span>Enviar reporte de incidente</span>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- SECCIÓN: Tipologías y Compromisos de Atención -->
+      <section class="w-full bg-surface-container-low py-16 mt-8">
+        <div class="max-w-7xl mx-auto px-gutter space-y-12">
+          <div class="text-center max-w-2xl mx-auto space-y-2">
+            <span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-bold">Gestión y Tiempos de Respuesta</span>
+            <h2 class="font-headline-xl text-headline-xl text-on-surface font-extrabold">Compromisos de Atención Comunal</h2>
+            <p class="font-body-md text-body-md text-secondary">
+              Conocé cómo opera el flujo de derivación operativa según la naturaleza de cada aviso vecinal.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+            <!-- Card 1 -->
+            <div class="p-6 rounded-2xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+              <div class="space-y-3">
+                <div class="w-12 h-12 rounded-xl bg-surface-container text-primary-container flex items-center justify-center">
+                  <span class="material-symbols-outlined text-[26px]">flash_on</span>
+                </div>
+                <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Luminarias y Cables</h3>
+                <p class="font-body-sm text-body-sm text-secondary">
+                  Prioridad por prevención de seguridad vial y peatonal. Atención inmediata a columnas con riesgo eléctrico o postes caídos.
+                </p>
+              </div>
+              <div class="mt-6 pt-4 border-t border-surface-container flex items-center justify-between">
+                <span class="font-label-sm text-label-sm text-secondary">Respuesta promedio:</span>
+                <span class="font-label-md text-label-md text-primary font-bold">24 a 48 hs</span>
+              </div>
+            </div>
+            <!-- Card 2 -->
+            <div class="p-6 rounded-2xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+              <div class="space-y-3">
+                <div class="w-12 h-12 rounded-xl bg-surface-container text-secondary flex items-center justify-center">
+                  <span class="material-symbols-outlined text-[26px]">car_repair</span>
+                </div>
+                <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Bacheo y Asfalto</h3>
+                <p class="font-body-sm text-body-sm text-secondary">
+                  Inspección técnica preliminar dentro de las 48 hs. Inclusión en cuadrilla de sellado o reasfaltado programado.
+                </p>
+              </div>
+              <div class="mt-6 pt-4 border-t border-surface-container flex items-center justify-between">
+                <span class="font-label-sm text-label-sm text-secondary">Respuesta promedio:</span>
+                <span class="font-label-md text-label-md text-secondary font-bold">72 a 96 hs</span>
+              </div>
+            </div>
+            <!-- Card 3 -->
+            <div class="p-6 rounded-2xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+              <div class="space-y-3">
+                <div class="w-12 h-12 rounded-xl bg-surface-container text-tertiary flex items-center justify-center">
+                  <span class="material-symbols-outlined text-[26px]">recycling</span>
+                </div>
+                <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Limpieza y Residuos</h3>
+                <p class="font-body-sm text-body-sm text-secondary">
+                  Intervención del servicio de higiene urbana. Incluye retiro de escombros, microbasurales y ramas de poda.
+                </p>
+              </div>
+              <div class="mt-6 pt-4 border-t border-surface-container flex items-center justify-between">
+                <span class="font-label-sm text-label-sm text-secondary">Respuesta promedio:</span>
+                <span class="font-label-md text-label-md text-tertiary font-bold">24 a 36 hs</span>
+              </div>
+            </div>
+            <!-- Card 4 -->
+            <div class="p-6 rounded-2xl bg-surface-container-lowest shadow-sm flex flex-col justify-between">
+              <div class="space-y-3">
+                <div class="w-12 h-12 rounded-xl bg-surface-container text-error flex items-center justify-center">
+                  <span class="material-symbols-outlined text-[26px]">security</span>
+                </div>
+                <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Prevención y Seguridad</h3>
+                <p class="font-body-sm text-body-sm text-secondary">
+                  Derivación al Centro de Monitoreo Urbano (COM) y enlace con móviles de patrullaje comunal para relevamiento.
+                </p>
+              </div>
+              <div class="mt-6 pt-4 border-t border-surface-container flex items-center justify-between">
+                <span class="font-label-sm text-label-sm text-secondary">Respuesta promedio:</span>
+                <span class="font-label-md text-label-md text-error font-bold">Inmediata / 12 hs</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- FOOTER OFICIAL CON ANCLA #CONTACTO -->
+  <footer id="contacto" class="w-full bg-surface-container-lowest border-t border-surface-container text-on-surface mt-space-xl scroll-mt-24">
+    <div class="max-w-7xl mx-auto px-gutter py-space-xl">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter mb-space-xl">
+        <div class="space-y-space-sm">
+          <div class="flex items-center gap-space-sm">
+            <img alt="Logo Reportes Barriales" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4_hMaoMPtiJF31FvJFy2Mh3TXYkmxqcSN1iqLZyfD4AQSmra39aEI0XFjyTO6gIO14qG8flRkGM5w9BORq3wgJt1SfACfQ-jI7DjDdUei9aSPN6B2UnAuweIUGWkKyaGsH00sES7j-NapRn909JaMHeqOj7F5n5W9RohgJd_oi3SnhsuMttgubu-tloJ_697WqAG1TftXn99Ui6n74Su1_iMZLPaBsbKFFTEBvTmbq9yw1gJQPOg"/>
+            <span class="font-headline-sm text-headline-sm text-on-surface">Reportes Barriales</span>
+          </div>
+          <p class="font-body-md text-body-md text-on-surface-variant">
+            Plataforma cívica para la canalización, resolución colaborativa y seguimiento transparente de incidencias urbanas en tu barrio.
+          </p>
+          <div class="flex items-center gap-space-xs text-on-surface-variant font-body-sm text-body-sm">
+            <span class="material-symbols-outlined text-primary text-[16px]">verified</span>
+            <span>Sistema Oficial de Gestión Comunal</span>
+          </div>
+        </div>
+
+        <div class="space-y-space-xs">
+          <h4 class="font-headline-sm text-headline-sm text-on-surface mb-space-sm">Centro de Atención Vecinal</h4>
+          <p class="font-body-md text-body-md text-on-surface-variant">Palacio Comunal - Sede Central</p>
+          <p class="font-body-md text-body-md text-on-surface-variant">Horario: Lun a Vie 08:00 a 20:00 hs</p>
+          <p class="font-body-md text-body-md text-on-surface-variant">Guardias y Emergencias: 24 hs</p>
+          <p class="font-label-lg text-label-lg text-primary font-bold mt-space-xs">
+            Teléfono directo: <a href="tel:147" class="hover:underline">147</a> | <a href="tel:0800227746" class="hover:underline">0800-BARRIO</a>
+          </p>
+        </div>
+
+        <div class="space-y-space-xs">
+          <h4 class="font-headline-sm text-headline-sm text-on-surface mb-space-sm">Transparencia y Gestión</h4>
+          <ul class="space-y-space-xs font-body-md text-body-md">
+            <li><a href="reportes.html" class="text-on-surface-variant hover:text-on-surface transition-colors">Portal de Transparencia ciudadana</a></li>
+            <li><a href="seguimiento.html" class="text-on-surface-variant hover:text-on-surface transition-colors">Consulta de expediente por código</a></li>
+            <li><span class="text-secondary/70 text-xs">Acceso administrativo en enlace independiente</span></li>
+          </ul>
+        </div>
+
+        <div class="space-y-space-xs">
+          <h4 class="font-headline-sm text-headline-sm text-on-surface mb-space-sm">Compromiso Cívico</h4>
+          <p class="font-body-md text-body-md text-on-surface-variant">
+            Construimos una ciudad más segura, limpia y transitable con la participación activa de cada vecina y vecino.
+          </p>
+          <div class="p-space-sm bg-surface-container-low rounded-lg border border-surface-container">
+            <span class="font-label-sm text-label-sm text-on-surface-variant block">Monitoreo en tiempo real</span>
+            <span class="font-label-md text-label-md text-on-surface font-semibold">100% de tickets geolocalizados</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-space-md border-t border-surface-container flex flex-col md:flex-row items-center justify-between gap-space-sm font-body-sm text-body-sm text-on-surface-variant">
+        <p>© 2024 Municipio &amp; Comuna Digital. Todos los derechos reservados.</p>
+        <p class="text-center md:text-right">Plataforma de Gobierno Abierto para el Fortalecimiento Barrial.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SCRIPT CLIENTE CON ASOCIACIÓN DINÁMICA A GOOGLE MAPS Y GUARDADO EN SQL -->
+  <script>
+    const API_BASE = window.location.origin.startsWith('http') ? window.location.origin : 'http://localhost:3000';
+    let mapDebounceTimer = null;
+
+    // 1. Selector de Tipología
+    function selectType(tipo, element) {
+      document.getElementById('tipoIncidenteInput').value = tipo;
+      
+      const buttons = document.querySelectorAll('.tipo-btn');
+      buttons.forEach(btn => {
+        btn.classList.remove('ring-2', 'ring-primary-container', 'shadow-sm');
+        btn.classList.add('hover:bg-surface-container');
+        const iconContainer = btn.querySelector('div');
+        if (iconContainer) {
+          iconContainer.classList.remove('text-primary-container');
+          iconContainer.classList.add('text-secondary');
+        }
+        // El label es el ÚLTIMO span directo del botón (no el material-icon)
+        const spans = btn.querySelectorAll(':scope > span');
+        const labelSpan = spans[spans.length - 1];
+        if (labelSpan) {
+          labelSpan.classList.remove('font-bold');
+          labelSpan.classList.add('font-semibold');
+        }
+      });
+
+      element.classList.add('ring-2', 'ring-primary-container', 'shadow-sm');
+      element.classList.remove('hover:bg-surface-container');
+      const icon = element.querySelector('div');
+      if (icon) {
+        icon.classList.remove('text-secondary');
+        icon.classList.add('text-primary-container');
+      }
+      const elemSpans = element.querySelectorAll(':scope > span');
+      const labelElem = elemSpans[elemSpans.length - 1];
+      if (labelElem) {
+        labelElem.classList.remove('font-semibold');
+        labelElem.classList.add('font-bold');
+      }
+    }
+
+    // 2. Formateo y validación de DNI
+    function formatDNI(input) {
+      let value = input.value.replace(/\D/g, '');
+      if (value.length > 8) value = value.slice(0, 8);
+      if (value.length > 5) {
+        input.value = value.replace(/^(\d{2})(\d{3})(\d{0,3})/, '$1.$2.$3');
+      } else if (value.length > 2) {
+        input.value = value.replace(/^(\d{2})(\d{0,3})/, '$1.$2');
+      } else {
+        input.value = value;
+      }
+    }
+
+    // 3. Contador de Caracteres
+    function updateCharCount(textarea) {
+      const length = textarea.value.length;
+      document.getElementById('charCount').textContent = length + ' / 500';
+    }
+
+    // 4. Asociación en Vivo a Google Maps
+    function updateGoogleMap(address) {
+      if (!address || address.trim().length < 3) return;
+      
+      const query = encodeURIComponent(address.trim() + ', Buenos Aires, Argentina');
+      const mapFrame = document.getElementById('gmap-frame');
+      const hud = document.getElementById('map-address-hud');
+      const gmapsBtn = document.getElementById('btn-open-gmaps');
+
+      mapFrame.src = `https://maps.google.com/maps?q=${query}&t=&z=16&ie=UTF8&iwloc=&output=embed`;
+      hud.textContent = `Ubicación: ${address.trim()}`;
+      gmapsBtn.href = `https://www.google.com/maps/search/?api=1&query=${query}`;
+    }
+
+    function debounceUpdateMap(val) {
+      clearTimeout(mapDebounceTimer);
+      mapDebounceTimer = setTimeout(() => {
+        updateGoogleMap(val);
+      }, 500);
+    }
+
+    function syncMapWithAddress() {
+      const val = document.getElementById('direccionIncidente').value.trim();
+      if (val) {
+        updateGoogleMap(val);
+      } else {
+        document.getElementById('direccionIncidente').focus();
+      }
+    }
+
+    // 5. Scroll suave al pie de página (Contacto)
+    function scrollToContact(e) {
+      if (e) e.preventDefault();
+      const el = document.getElementById('contacto');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // 6. Envío del Formulario a la Base de Datos SQL
+    async function handleSubmit(event) {
+      event.preventDefault();
+      const submitBtn = event.target.querySelector('button[type="submit"]');
+      const originalBtnContent = submitBtn.innerHTML;
+
+      // Validación preventiva de DNI
+      const dniVal = document.getElementById('dniSolicitante').value.replace(/\D/g, '');
+      if (dniVal.length < 7 || dniVal.length > 8) {
+        alert('Por favor ingrese un número de DNI válido (7 u 8 dígitos).');
+        document.getElementById('dniSolicitante').focus();
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<span class="material-symbols-outlined text-[20px] animate-spin">sync</span> <span>Guardando en base de datos SQL...</span>`;
+
+      try {
+        const payload = {
+          nombre_apellido: document.getElementById('nombreApellido').value.trim(),
+          dni: dniVal,
+          contacto: document.getElementById('contactoInput').value.trim() || null,
+          tipo_incidente: document.getElementById('tipoIncidenteInput').value.trim(),
+          direccion: document.getElementById('direccionIncidente').value.trim(),
+          coordenadas: document.getElementById('coordenadasInput').value.trim() || '-34.6037, -58.3816',
+          prioridad: document.getElementById('prioridadIncidente').value,
+          descripcion: document.getElementById('descripcionIncidente').value.trim()
+        };
+
+        let response;
+        try {
+          response = await fetch(`${API_BASE}/api/reports`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+        } catch (netErr) {
+          throw new Error('No se pudo conectar con el servidor. Verificá que esté iniciado (ventana de "node server.js" abierta) y que abriste la página desde http://localhost:3000 y no con doble clic sobre el archivo.');
+        }
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          const errMsg = result.errors ? result.errors.join('\n') : (result.message || 'Error al guardar el reporte');
+          throw new Error(errMsg);
+        }
+
+        const report = result.data;
+
+        // Recordar en este navegador los reportes creados, para la vista "Mis reportes"
+        try {
+          const prev = JSON.parse(localStorage.getItem('mis_reportes_codigos') || '[]');
+          const lista = Array.isArray(prev) ? prev : [];
+          if (!lista.includes(report.code)) lista.push(report.code);
+          localStorage.setItem('mis_reportes_codigos', JSON.stringify(lista.slice(-100)));
+        } catch (e) { /* si el navegador bloquea localStorage, se ignora */ }
+        document.getElementById('report-code-badge').textContent = report.code;
+
+        const now = new Date();
+        const options = { hour: '2-digit', minute: '2-digit' };
+        document.getElementById('fecha-confirmacion').textContent = 'Hoy, ' + now.toLocaleTimeString([], options) + ' hs';
+
+        const trackBtn = document.getElementById('btn-ir-seguimiento');
+        if (trackBtn) {
+          trackBtn.href = `seguimiento.html?code=${encodeURIComponent(report.code)}`;
+        }
+
+        const modal = document.getElementById('modal-exito');
+        modal.classList.remove('hidden');
+        modal.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        // Limpiar formulario y resetear estados
+        resetFormForNewReport(false);
+      } catch (error) {
+        alert('No se pudo registrar el reporte en la base de datos SQL:\n' + error.message);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnContent;
+      }
+    }
+
+    // 7. Limpieza y Reconfiguración de Formulario
+    function resetFormForNewReport(hideModal = true) {
+      if (hideModal) {
+        const modal = document.getElementById('modal-exito');
+        modal.classList.add('hidden');
+      }
+
+      document.getElementById('incidentForm').reset();
+      document.getElementById('charCount').textContent = '0 / 500';
+
+      // Restaurar categoría a "alumbrado" por defecto
+      const firstBtn = document.querySelector('.tipo-btn');
+      if (firstBtn) {
+        selectType('alumbrado', firstBtn);
+      }
+    }
+
+    // 8. Copiar código al portapapeles
+    function copyReportCode() {
+      const code = document.getElementById('report-code-badge').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        const btnText = document.getElementById('btn-copiar-texto');
+        const prevText = btnText.textContent;
+        btnText.textContent = '¡Copiado!';
+        setTimeout(() => {
+          btnText.textContent = prevText;
+        }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>

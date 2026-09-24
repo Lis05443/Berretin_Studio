@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/><meta name="robots" content="noindex,nofollow,noarchive"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Portal de Gestión Operativa Comunal | Administración de Reportes</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+    }
+    /* La tabla ocupa todo el ancho disponible sin generar scroll horizontal. */
+    .reports-table-wrap {
+      width: 100%;
+      overflow-x: hidden;
+    }
+    .reports-table {
+      width: 100%;
+      table-layout: fixed;
+    }
+    .reports-table th,
+    .reports-table td {
+      min-width: 0;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+    .reports-table td .truncate {
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+    }
+    @media (max-width: 1100px) {
+      .reports-table th, .reports-table td { padding-left: .65rem; padding-right: .65rem; }
+      .reports-table .report-contact { font-size: 10px; }
+    }
+    @media (max-width: 860px) {
+      .reports-table th, .reports-table td { padding-left: .5rem; padding-right: .5rem; }
+      .reports-table .report-category { font-size: 10px; }
+      .reports-table .report-category .material-symbols-outlined { font-size: 14px; }
+    }
+  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-tertiary-fixed-variant": "#653e00",
+            "primary-fixed-dim": "#ffb4ab",
+            "on-surface": "#0b1c30",
+            "error-container": "#ffdad6",
+            "inverse-surface": "#213145",
+            "surface-container": "#e5eeff",
+            "error": "#ba1a1a",
+            "secondary-fixed": "#d8e3fb",
+            "surface-bright": "#f8f9ff",
+            "surface": "#f8f9ff",
+            "inverse-on-surface": "#eaf1ff",
+            "surface-dim": "#cbdbf5",
+            "tertiary-fixed-dim": "#ffb95f",
+            "inverse-primary": "#ffb4ab",
+            "on-primary-fixed-variant": "#93000b",
+            "on-tertiary-fixed": "#2a1700",
+            "primary-fixed": "#ffdad6",
+            "surface-container-highest": "#d3e4fe",
+            "on-background": "#0b1c30",
+            "on-tertiary-container": "#fff7f1",
+            "on-error-container": "#93000a",
+            "on-secondary": "#ffffff",
+            "secondary-fixed-dim": "#bcc7de",
+            "tertiary-container": "#a06500",
+            "outline-variant": "#e6bdb8",
+            "on-secondary-container": "#586377",
+            "on-error": "#ffffff",
+            "surface-variant": "#d3e4fe",
+            "tertiary-fixed": "#ffddb8",
+            "surface-container-lowest": "#ffffff",
+            "outline": "#916f6b",
+            "secondary": "#545f73",
+            "on-tertiary": "#ffffff",
+            "surface-container-low": "#eff4ff",
+            "primary-container": "#dc2626",
+            "on-primary-fixed": "#410002",
+            "tertiary": "#7f4f00",
+            "on-secondary-fixed-variant": "#3c475a",
+            "primary": "#b70011",
+            "on-secondary-fixed": "#111c2d",
+            "surface-tint": "#bf0715",
+            "background": "#f8f9ff",
+            "on-primary-container": "#fff6f5",
+            "surface-container-high": "#dce9ff",
+            "on-surface-variant": "#5c403c",
+            "secondary-container": "#d5e0f8",
+            "on-primary": "#ffffff"
+          },
+          fontFamily: {
+            sans: ["Plus Jakarta Sans", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-surface font-sans text-on-surface min-h-screen flex flex-col antialiased">
+
+  <!-- ============================================================ -->
+  <!-- 1. VISTA DE AUTENTICACIÓN RESTRINGIDA (LOGIN GATEWAY)         -->
+  <!-- ============================================================ -->
+  <div id="login-view" class="flex-1 flex items-center justify-center p-4 bg-gradient-to-br from-surface-container-low via-surface to-surface-container-highest">
+    <div class="w-full max-w-md bg-surface-container-lowest rounded-2xl shadow-2xl border border-surface-container overflow-hidden">
+      <!-- Header de Seguridad -->
+      <div class="bg-gradient-to-r from-on-surface to-inverse-surface p-6 text-surface-container-lowest text-center relative">
+        <div class="inline-flex p-3 rounded-2xl bg-white/10 backdrop-blur-sm mb-3">
+          <span class="material-symbols-outlined text-[36px] text-primary-fixed">admin_panel_settings</span>
+        </div>
+        <h2 class="text-xl font-bold tracking-tight">Portal Operativo Municipal</h2>
+        <p class="text-xs text-secondary-fixed mt-1">Acceso Exclusivo para Funcionarios y Cuadrillas</p>
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 mt-3 rounded-full bg-primary/30 border border-primary-fixed-dim/30 text-xs font-medium text-white">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          Conexión Segura SQL • JWT Protegido
+        </span>
+      </div>
+
+      <!-- Formulario de Acceso -->
+      <form id="adminLoginForm" onsubmit="handleLogin(event)" class="p-6 sm:p-8 space-y-4">
+        <div id="login-alert" class="hidden p-3 rounded-xl bg-error-container text-on-error-container text-xs flex items-center gap-2">
+          <span class="material-symbols-outlined text-[18px]">error</span>
+          <span id="login-alert-text">Credenciales inválidas.</span>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-secondary mb-1.5" for="login-username">
+            Usuario Operativo
+          </label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3 top-3 text-secondary text-[20px]">person</span>
+            <input id="login-username" type="text" required value="admin" placeholder="admin" autocomplete="username"
+              class="w-full pl-10 pr-3.5 h-11 bg-surface-container-low text-on-surface rounded-xl border border-surface-container focus:outline-none focus:ring-2 focus:ring-primary-container text-sm font-medium" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-secondary mb-1.5" for="login-password">
+            Contraseña de Seguridad
+          </label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3 top-3 text-secondary text-[20px]">key</span>
+            <input id="login-password" type="password" required value="Admin@Civic2024!" placeholder="Ingresa tu contraseña" autocomplete="current-password"
+              class="w-full pl-10 pr-12 h-11 bg-surface-container-low text-on-surface rounded-xl border border-surface-container focus:outline-none focus:ring-2 focus:ring-primary-container text-sm font-medium" />
+            <button type="button" id="btn-toggle-pwd" onclick="togglePasswordVisibility(event)" class="absolute right-2.5 top-2.5 p-1 rounded-lg hover:bg-surface-container text-secondary hover:text-on-surface cursor-pointer focus:outline-none" title="Mostrar u ocultar contraseña">
+              <span id="pwd-icon" class="material-symbols-outlined text-[20px] select-none pointer-events-none">visibility</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Botón de acceso inmediato 1-Clic -->
+        <button type="button" onclick="quickLoginAdmin()"
+          class="w-full h-11 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer">
+          <span class="material-symbols-outlined text-[20px]">verified_user</span>
+          <span>Entrar directamente como Administrador</span>
+        </button>
+
+        <!-- Botón estándar de formulario -->
+        <button type="submit" id="btn-login-submit"
+          class="w-full h-11 rounded-xl bg-primary-container hover:bg-primary text-on-primary font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer">
+          <span class="material-symbols-outlined text-[20px]">lock_open</span>
+          <span>Ingresar con las credenciales escritas</span>
+        </button>
+
+        <!-- Accesos rápidos para evaluación/pruebas -->
+        <div class="pt-3 border-t border-surface-container">
+          <p class="text-xs text-secondary font-medium mb-2 text-center">Seleccionar credenciales:</p>
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button" onclick="quickFill('admin', 'Admin@Civic2024!')"
+              class="p-2 rounded-lg bg-surface-container text-left text-xs hover:bg-surface-container-high transition-colors cursor-pointer">
+              <span class="font-bold text-on-surface block">Admin General</span>
+              <span class="text-secondary text-[11px]">admin / Admin@...</span>
+            </button>
+            <button type="button" onclick="quickFill('lrossi', 'Operador@2024!')"
+              class="p-2 rounded-lg bg-surface-container text-left text-xs hover:bg-surface-container-high transition-colors cursor-pointer">
+              <span class="font-bold text-on-surface block">Operador Rossi</span>
+              <span class="text-secondary text-[11px]">lrossi / Operador@...</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="text-center pt-2">
+          <span class="text-xs text-secondary">Interfaz administrativa independiente</span>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- 2. VISTA PRINCIPAL DEL ADMINISTRADOR (DASHBOARD SUITE)        -->
+  <!-- ============================================================ -->
+  <div id="admin-dashboard-view" class="hidden flex-1 flex flex-col">
+    <!-- Navbar del Administrador -->
+    <header class="sticky top-0 z-40 bg-surface-container-lowest border-b border-surface-container shadow-xs">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between gap-4">
+        <!-- Brand & Context -->
+        <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2">
+            <img alt="Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4_hMaoMPtiJF31FvJFy2Mh3TXYkmxqcSN1iqLZyfD4AQSmra39aEI0XFjyTO6gIO14qG8flRkGM5w9BORq3wgJt1SfACfQ-jI7DjDdUei9aSPN6B2UnAuweIUGWkKyaGsH00sES7j-NapRn909JaMHeqOj7F5n5W9RohgJd_oi3SnhsuMttgubu-tloJ_697WqAG1TftXn99Ui6n74Su1_iMZLPaBsbKFFTEBvTmbq9yw1gJQPOg"/>
+            <div class="flex flex-col">
+              <div class="flex items-center gap-2">
+                <span class="font-bold text-base text-on-surface leading-tight">Mesa de Gestión Comunal</span>
+                <span class="px-2 py-0.5 rounded-full bg-error-container text-primary text-[10px] font-bold uppercase tracking-wider">Admin</span>
+              </div>
+              <span class="text-xs text-secondary leading-none">Gobierno Municipal • Control de Incidencias</span>
+            </div>
+          </a>
+        </div>
+
+        <!-- Links y Perfil de Usuario -->
+        <div class="flex items-center gap-3">
+          <!-- Indicador de separación del portal ciudadano -->
+          <span title="Interfaz administrativa independiente" class="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container text-xs font-semibold text-secondary">
+            <span class="material-symbols-outlined text-[16px]">admin_panel_settings</span>
+            <span>Acceso operativo seguro</span>
+          </span>
+
+          <!-- Botón Exportar CSV -->
+          <button onclick="exportCSV()" title="Descargar base de datos en CSV"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container text-xs font-semibold text-on-surface hover:bg-surface-container-high transition-colors">
+            <span class="material-symbols-outlined text-[16px]">download</span>
+            <span class="hidden sm:inline">Exportar CSV</span>
+          </button>
+
+          <!-- Perfil Operativo -->
+          <div class="flex items-center gap-2 pl-2 border-l border-surface-container">
+            <div class="w-9 h-9 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-bold text-sm shadow-xs">
+              <span id="user-initials">AD</span>
+            </div>
+            <div class="hidden sm:flex flex-col text-left">
+              <span id="user-fullname" class="text-xs font-bold text-on-surface leading-none">Administrador Central</span>
+              <span id="user-area-role" class="text-[11px] text-secondary leading-none mt-1">Mesa General • Rol Admin</span>
+            </div>
+            <button onclick="handleLogout()" title="Cerrar Sesión Segura"
+              class="p-2 rounded-lg text-secondary hover:text-error hover:bg-error-container/30 transition-colors ml-1">
+              <span class="material-symbols-outlined text-[20px]">logout</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Contenido Principal del Dashboard -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      <!-- 1. Bento de Métricas en Tiempo Real -->
+      <section class="grid grid-cols-2 lg:grid-cols-5 gap-3.5 sm:gap-4">
+        <div class="bg-surface-container-lowest p-4 rounded-xl border border-surface-container shadow-xs">
+          <div class="flex items-center justify-between text-secondary mb-2">
+            <span class="text-xs font-bold uppercase tracking-wider">Total Reportes</span>
+            <span class="material-symbols-outlined text-primary text-[20px]">receipt_long</span>
+          </div>
+          <div class="flex items-baseline gap-1">
+            <span id="stat-total" class="text-2xl sm:text-3xl font-extrabold text-on-surface">--</span>
+            <span class="text-xs text-secondary font-medium">ingresos</span>
+          </div>
+          <p class="text-[11px] text-secondary mt-1">Base de datos SQL comunal</p>
+        </div>
+
+        <div class="bg-surface-container-lowest p-4 rounded-xl border border-surface-container shadow-xs">
+          <div class="flex items-center justify-between text-error mb-2">
+            <span class="text-xs font-bold uppercase tracking-wider">Pendientes</span>
+            <span class="material-symbols-outlined text-[20px]">pending_actions</span>
+          </div>
+          <div class="flex items-baseline gap-1">
+            <span id="stat-pendientes" class="text-2xl sm:text-3xl font-extrabold text-error">--</span>
+            <span class="text-xs text-error font-medium">sin asignar</span>
+          </div>
+          <p class="text-[11px] text-secondary mt-1">Requieren orden de trabajo</p>
+        </div>
+
+        <div class="bg-surface-container-lowest p-4 rounded-xl border border-surface-container shadow-xs">
+          <div class="flex items-center justify-between text-amber-600 mb-2">
+            <span class="text-xs font-bold uppercase tracking-wider">En Cuadrilla</span>
+            <span class="material-symbols-outlined text-[20px]">engineering</span>
+          </div>
+          <div class="flex items-baseline gap-1">
+            <span id="stat-proceso" class="text-2xl sm:text-3xl font-extrabold text-amber-600">--</span>
+            <span class="text-xs text-amber-600 font-medium">en territorio</span>
+          </div>
+          <p class="text-[11px] text-secondary mt-1">Intervención operativa activa</p>
+        </div>
+
+        <div class="bg-surface-container-lowest p-4 rounded-xl border border-surface-container shadow-xs">
+          <div class="flex items-center justify-between text-emerald-700 mb-2">
+            <span class="text-xs font-bold uppercase tracking-wider">Resueltos</span>
+            <span class="material-symbols-outlined text-[20px]">task_alt</span>
+          </div>
+          <div class="flex items-baseline gap-1">
+            <span id="stat-resueltos" class="text-2xl sm:text-3xl font-extrabold text-emerald-700">--</span>
+            <span class="text-xs text-emerald-700 font-medium">concluidos</span>
+          </div>
+          <p class="text-[11px] text-secondary mt-1">Con auditoría vecinal</p>
+        </div>
+
+        <div class="col-span-2 lg:col-span-1 bg-surface-container-lowest p-4 rounded-xl border border-surface-container shadow-xs">
+          <div class="flex items-center justify-between text-primary mb-2">
+            <span class="text-xs font-bold uppercase tracking-wider">Efectividad</span>
+            <span class="material-symbols-outlined text-[20px]">analytics</span>
+          </div>
+          <div class="flex items-baseline gap-1">
+            <span id="stat-efectividad" class="text-2xl sm:text-3xl font-extrabold text-on-surface">--%</span>
+            <span class="text-xs text-secondary font-medium">resolución</span>
+          </div>
+          <p class="text-[11px] text-secondary mt-1">Demora media: &lt; 48 hs</p>
+        </div>
+      </section>
+
+      <!-- 2. Barra de Filtros, Búsqueda y Herramientas -->
+      <section class="bg-surface-container-lowest p-4 rounded-xl border border-surface-container shadow-xs space-y-3">
+        <div class="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
+          <!-- Búsqueda en vivo -->
+          <div class="relative flex-1">
+            <span class="material-symbols-outlined absolute left-3 top-2.5 text-secondary text-[20px]">search</span>
+            <input id="admin-search-input" type="text" oninput="debounceSearch()"
+              placeholder="Buscar por código (#REP-XXXX), DNI, solicitante, o dirección..."
+              class="w-full pl-9 pr-9 h-10 bg-surface-container-low text-on-surface rounded-lg border border-surface-container focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary-container text-xs sm:text-sm font-medium" />
+            <button id="btn-clear-search" onclick="clearSearch()" class="hidden absolute right-3 top-2.5 text-secondary hover:text-on-surface">
+              <span class="material-symbols-outlined text-[18px]">close</span>
+            </button>
+          </div>
+
+          <!-- Acciones de cabecera -->
+          <div class="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0">
+            <button onclick="refreshData()" title="Refrescar datos en vivo de la BD"
+              class="h-10 px-3 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface text-xs font-bold inline-flex items-center gap-1.5 transition-colors shrink-0">
+              <span id="refresh-icon" class="material-symbols-outlined text-[18px]">sync</span>
+              <span>Refrescar</span>
+            </button>
+            <button onclick="resetFilters()" title="Restablecer todos los filtros"
+              class="h-10 px-3 rounded-lg bg-surface-container-low hover:bg-surface-container text-secondary hover:text-on-surface text-xs font-semibold inline-flex items-center gap-1 transition-colors shrink-0">
+              <span class="material-symbols-outlined text-[16px]">filter_alt_off</span>
+              <span>Limpiar filtros</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Filtros Rápidos Combinables -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-surface-container">
+          <!-- Filtro de Estado -->
+          <div>
+            <label class="block text-[11px] font-bold uppercase tracking-wider text-secondary mb-1">Estado</label>
+            <select id="filter-status" onchange="applyFilters()"
+              class="w-full h-9 px-2.5 bg-surface-container-low text-on-surface rounded-lg text-xs font-semibold border border-surface-container focus:outline-none focus:ring-1 focus:ring-primary-container">
+              <option value="all">Todos los estados</option>
+              <option value="pendiente">Pendiente</option>
+              <option value="en_revision">En revisión</option>
+              <option value="en_proceso">En proceso / Cuadrilla</option>
+              <option value="resuelto">Resuelto</option>
+            </select>
+          </div>
+
+          <!-- Filtro de Tipología -->
+          <div>
+            <label class="block text-[11px] font-bold uppercase tracking-wider text-secondary mb-1">Tipo de Incidente</label>
+            <select id="filter-type" onchange="applyFilters()"
+              class="w-full h-9 px-2.5 bg-surface-container-low text-on-surface rounded-lg text-xs font-semibold border border-surface-container focus:outline-none focus:ring-1 focus:ring-primary-container">
+              <option value="all">Todas las categorías</option>
+              <option value="alumbrado">Alumbrado público</option>
+              <option value="infraestructura">Baches y calzadas</option>
+              <option value="limpieza">Limpieza y residuos</option>
+              <option value="seguridad">Seguridad barrial</option>
+              <option value="ruidos">Ruidos molestos</option>
+              <option value="arbolado">Arbolado / Plazas</option>
+              <option value="pluvial">Sumideros y pluvial</option>
+              <option value="otro">Otros reclamos</option>
+            </select>
+          </div>
+
+          <!-- Filtro de Prioridad -->
+          <div>
+            <label class="block text-[11px] font-bold uppercase tracking-wider text-secondary mb-1">Prioridad</label>
+            <select id="filter-priority" onchange="applyFilters()"
+              class="w-full h-9 px-2.5 bg-surface-container-low text-on-surface rounded-lg text-xs font-semibold border border-surface-container focus:outline-none focus:ring-1 focus:ring-primary-container">
+              <option value="all">Todas las prioridades</option>
+              <option value="urgente">Urgente</option>
+              <option value="alta">Alta</option>
+              <option value="media">Media</option>
+              <option value="baja">Baja</option>
+            </select>
+          </div>
+
+          <!-- Ordenamiento -->
+          <div>
+            <label class="block text-[11px] font-bold uppercase tracking-wider text-secondary mb-1">Orden</label>
+            <select id="filter-sort" onchange="applyFilters()"
+              class="w-full h-9 px-2.5 bg-surface-container-low text-on-surface rounded-lg text-xs font-semibold border border-surface-container focus:outline-none focus:ring-1 focus:ring-primary-container">
+              <option value="recent">Más recientes primero</option>
+              <option value="oldest">Más antiguos primero</option>
+              <option value="urgency">Mayor urgencia primero</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. Tabla Principal de Gestión Operativa -->
+      <section class="bg-surface-container-lowest rounded-xl border border-surface-container shadow-xs overflow-hidden">
+        <!-- Barra de estado de resultados -->
+        <div class="px-5 py-3 border-b border-surface-container flex items-center justify-between bg-surface-container-low/50">
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold text-on-surface uppercase tracking-wide">Padrón de Reportes Activos</span>
+            <span id="results-count-badge" class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface text-[11px] font-bold">0 reportes</span>
+          </div>
+          <span class="text-[11px] text-secondary hidden sm:inline">Datos confidenciales de solicitantes desbloqueados para gestión oficial</span>
+        </div>
+
+        <!-- Tabla Responsive -->
+        <div class="reports-table-wrap">
+          <table class="reports-table text-left border-collapse">
+            <colgroup>
+              <col style="width: 11%">
+              <col style="width: 16%">
+              <col style="width: 12%">
+              <col style="width: 18%">
+              <col style="width: 8%">
+              <col style="width: 12%">
+              <col style="width: 11%">
+              <col style="width: 12%">
+            </colgroup>
+            <thead>
+              <tr class="bg-surface-container text-secondary text-[11px] font-bold uppercase tracking-wider border-b border-surface-container">
+                <th class="py-3 px-4">Código / Fecha</th>
+                <th class="py-3 px-4">Vecino Solicitante</th>
+                <th class="py-3 px-4">Categoría</th>
+                <th class="py-3 px-4">Ubicación / Comuna</th>
+                <th class="py-3 px-4">Prioridad</th>
+                <th class="py-3 px-4">Cuadrilla Asignada</th>
+                <th class="py-3 px-4">Estado Operativo</th>
+                <th class="py-3 px-4 text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="reports-table-body" class="divide-y divide-surface-container text-xs text-on-surface">
+              <!-- Filas renderizadas dinámicamente con JS -->
+              <tr>
+                <td colspan="8" class="py-12 text-center text-secondary">
+                  <span class="material-symbols-outlined text-3xl animate-spin text-primary">sync</span>
+                  <p class="mt-2 text-xs">Cargando expedientes de la base de datos SQL...</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Paginación -->
+        <div id="pagination-controls" class="px-5 py-3 border-t border-surface-container flex items-center justify-between text-xs text-secondary bg-surface-container-low/30">
+          <span id="pagination-info">Mostrando página 1</span>
+          <div class="flex items-center gap-1.5">
+            <button id="btn-prev-page" onclick="changePage(-1)" disabled
+              class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-container-high disabled:opacity-40 disabled:cursor-not-allowed font-semibold text-on-surface">
+              Anterior
+            </button>
+            <span id="pagination-current" class="px-2 font-bold text-on-surface">1</span>
+            <button id="btn-next-page" onclick="changePage(1)" disabled
+              class="px-2.5 py-1 rounded bg-surface-container hover:bg-surface-container-high disabled:opacity-40 disabled:cursor-not-allowed font-semibold text-on-surface">
+              Siguiente
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- 3. MODAL DE GESTIÓN OPERATIVA COMPLETA (EXPEDIENTE OFICIAL)   -->
+  <!-- ============================================================ -->
+  <div id="modal-manage" class="hidden fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-5">
+    <div class="bg-surface-container-lowest w-full max-w-3xl rounded-2xl shadow-2xl border border-surface-container overflow-hidden my-auto animate-in fade-in duration-150">
+      <!-- Modal Header -->
+      <div class="px-6 py-4 bg-surface-container-low border-b border-surface-container flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <span class="material-symbols-outlined text-primary-container text-[24px]">assignment</span>
+          <div>
+            <h3 class="font-bold text-base text-on-surface" id="modal-report-code">#REP-XXXX-XXXX</h3>
+            <p class="text-xs text-secondary" id="modal-report-date">Ingresado: --</p>
+          </div>
+        </div>
+        <button onclick="closeManageModal()" class="p-1 rounded-lg text-secondary hover:text-on-surface hover:bg-surface-container">
+          <span class="material-symbols-outlined text-[22px]">close</span>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6 space-y-6 max-h-[75vh] overflow-y-auto custom-scroll">
+        <!-- Datos de Vecino y Ubicación -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-xl bg-surface-container-low/70 border border-surface-container">
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-secondary block">Vecino Solicitante</span>
+            <p id="modal-citizen-name" class="font-bold text-sm text-on-surface mt-0.5">--</p>
+            <p class="text-xs text-secondary mt-0.5">DNI: <span id="modal-citizen-dni" class="font-mono font-semibold text-on-surface">--</span></p>
+            <p class="text-xs text-secondary mt-0.5">Contacto: <span id="modal-citizen-contact" class="font-semibold text-primary">--</span></p>
+          </div>
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-secondary block">Ubicación y Comuna</span>
+            <p id="modal-address" class="font-bold text-sm text-on-surface mt-0.5">--</p>
+            <p id="modal-comuna" class="text-xs text-secondary mt-0.5">--</p>
+            <p class="text-xs text-secondary mt-0.5">Coordenadas: <span id="modal-coords" class="font-mono text-[11px]">--</span></p>
+          </div>
+        </div>
+
+        <!-- Descripción Completa y Fotografía -->
+        <div class="space-y-2">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-secondary block">Informe / Descripción del Reclamo</span>
+          <div id="modal-description" class="p-3.5 rounded-xl bg-surface-container-low text-xs text-on-surface leading-relaxed">
+            --
+          </div>
+        </div>
+
+        <!-- Evidencia Fotográfica si existe -->
+        <div id="modal-photo-container" class="hidden space-y-2">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-secondary block">Evidencia Fotográfica Adjunta</span>
+          <div class="relative rounded-xl overflow-hidden border border-surface-container bg-surface-container-low max-h-60 flex items-center justify-center">
+            <img id="modal-photo-img" src="" alt="Evidencia del reporte" class="w-full h-auto max-h-60 object-contain cursor-pointer" onclick="openPhotoLightbox(this.src)" />
+          </div>
+          <p class="text-[11px] text-secondary italic">Haz clic en la imagen para ampliar en pantalla completa.</p>
+        </div>
+
+        <!-- FORMULARIO DE ACCIÓN OPERATIVA -->
+        <form id="updateStatusForm" onsubmit="handleStatusUpdate(event)" class="space-y-4 pt-4 border-t border-surface-container">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-[20px]">tune</span>
+            <h4 class="font-bold text-sm text-on-surface">Actualizar Estado y Asignación de Cuadrilla</h4>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Nuevo Estado -->
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-secondary mb-1">
+                Estado Operativo *
+              </label>
+              <select id="edit-estado" required class="w-full h-10 px-3 bg-surface-container-low text-on-surface rounded-xl border border-surface-container text-xs font-bold focus:ring-2 focus:ring-primary-container focus:outline-none">
+                <option value="pendiente">Pendiente (A la espera de derivación)</option>
+                <option value="en_revision">En revisión (Evaluación técnica preliminar)</option>
+                <option value="en_proceso">En proceso (Cuadrilla asignada en territorio)</option>
+                <option value="resuelto">Resuelto (Intervención finalizada y validada)</option>
+              </select>
+            </div>
+
+            <!-- Asignación de Cuadrilla -->
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-secondary mb-1">
+                Cuadrilla Responsable
+              </label>
+              <input id="edit-cuadrilla" type="text" placeholder="Ej: Cuadrilla Alumbrado N° 4" list="cuadrillas-sugeridas"
+                class="w-full h-10 px-3 bg-surface-container-low text-on-surface rounded-xl border border-surface-container text-xs font-medium focus:ring-2 focus:ring-primary-container focus:outline-none" />
+              <datalist id="cuadrillas-sugeridas">
+                <option value="Cuadrilla de Alumbrado N° 4 - Servicios Públicos"></option>
+                <option value="Cuadrilla de Bacheo y Calzadas N° 2"></option>
+                <option value="Móvil de Higiene Urbana y Poda Barrial"></option>
+                <option value="Móvil de Prevención y Seguridad COM"></option>
+                <option value="Cuadrilla de Mantenimiento Pluvial y Sumideros"></option>
+              </datalist>
+            </div>
+
+            <!-- Plazo Estimado -->
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-secondary mb-1">
+                Plazo Estimado de Resolución
+              </label>
+              <input id="edit-tiempo" type="text" placeholder="Ej: 24 hs / Hoy 18:00 hs"
+                class="w-full h-10 px-3 bg-surface-container-low text-on-surface rounded-xl border border-surface-container text-xs font-medium focus:ring-2 focus:ring-primary-container focus:outline-none" />
+            </div>
+
+            <!-- Número de Acta / Orden -->
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-secondary mb-1">
+                Acta Municipal / Orden de Trabajo N°
+              </label>
+              <input id="edit-acta" type="text" placeholder="Ej: ACTA-2024-0891"
+                class="w-full h-10 px-3 bg-surface-container-low text-on-surface rounded-xl border border-surface-container text-xs font-medium focus:ring-2 focus:ring-primary-container focus:outline-none" />
+            </div>
+          </div>
+
+          <!-- Nota de Bitácora que se registra en la BD -->
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-secondary mb-1">
+              Nota Operativa Oficial (Se registrará en la Bitácora del Reclamo) *
+            </label>
+            <textarea id="edit-nota" rows="3" required
+              placeholder="Describa la intervención realizada, hallazgos de la cuadrilla o motivo del cambio de estado..."
+              class="w-full p-3 bg-surface-container-low text-on-surface rounded-xl border border-surface-container text-xs font-medium focus:ring-2 focus:ring-primary-container focus:outline-none resize-none"></textarea>
+            <p class="text-[11px] text-secondary mt-1">Esta nota será visible para el vecino en el portal de seguimiento con el sello del operador.</p>
+          </div>
+
+          <div class="flex items-center justify-between pt-2">
+            <button type="button" onclick="confirmDeleteReport()"
+              class="px-3 h-10 rounded-xl bg-error-container text-on-error-container hover:bg-error hover:text-white text-xs font-bold transition-colors inline-flex items-center gap-1.5 cursor-pointer">
+              <span class="material-symbols-outlined text-[18px]">delete</span>
+              <span>Eliminar Reclamo</span>
+            </button>
+
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="closeManageModal()"
+                class="px-4 h-10 rounded-xl bg-surface-container hover:bg-surface-container-high text-secondary hover:text-on-surface text-xs font-bold transition-colors">
+                Cancelar
+              </button>
+              <button type="submit" id="btn-save-status"
+                class="px-5 h-10 rounded-xl bg-primary-container hover:bg-primary text-on-primary text-xs font-bold shadow-md hover:shadow-lg transition-all inline-flex items-center gap-1.5 cursor-pointer">
+                <span class="material-symbols-outlined text-[18px]">save</span>
+                <span>Guardar en Base de Datos</span>
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <!-- Historial de Bitácora Registrado -->
+        <div class="space-y-3 pt-4 border-t border-surface-container">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold uppercase tracking-wider text-secondary flex items-center gap-1">
+              <span class="material-symbols-outlined text-[18px]">history</span>
+              Bitácora de Trazabilidad Registrada (<span id="modal-logs-count">0</span>)
+            </span>
+          </div>
+          <div id="modal-logs-list" class="space-y-2 max-h-48 overflow-y-auto custom-scroll pr-1">
+            <!-- Eventos de bitácora -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- 4. MODAL DE CONFIRMACIÓN PARA ELIMINACIÓN DE REPORTE          -->
+  <!-- ============================================================ -->
+  <div id="modal-delete-confirm" class="hidden fixed inset-0 z-60 overflow-y-auto bg-black/70 flex items-center justify-center p-4">
+    <div class="bg-surface-container-lowest max-w-md w-full rounded-2xl p-6 shadow-2xl border border-surface-container text-center space-y-4">
+      <div class="w-14 h-14 rounded-full bg-error-container text-error mx-auto flex items-center justify-center">
+        <span class="material-symbols-outlined text-[32px]">warning</span>
+      </div>
+      <h3 class="font-bold text-lg text-on-surface">¿Confirmar eliminación del reporte?</h3>
+      <p class="text-xs text-secondary leading-relaxed">
+        El reporte <strong id="delete-code-confirm" class="text-primary font-mono">#REP-XXXX</strong> y todos sus registros de bitácora y testimonios asociados serán eliminados de la base de datos SQL municipal. Esta acción quedará asentada en la auditoría inmutable.
+      </p>
+      <div class="flex items-center justify-center gap-3 pt-2">
+        <button onclick="closeDeleteConfirm()" class="px-4 h-10 rounded-xl bg-surface-container text-secondary hover:text-on-surface text-xs font-bold transition-colors">
+          Cancelar
+        </button>
+        <button onclick="executeDeleteReport()" id="btn-execute-delete" class="px-5 h-10 rounded-xl bg-error hover:bg-primary text-white text-xs font-bold transition-colors inline-flex items-center gap-1">
+          <span class="material-symbols-outlined text-[18px]">delete_forever</span>
+          <span>Sí, Eliminar de la Base de Datos</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- 5. LIGHTBOX DE FOTO AMPLIADA                                 -->
+  <!-- ============================================================ -->
+  <div id="photo-lightbox" class="hidden fixed inset-0 z-70 bg-black/90 backdrop-blur-md flex items-center justify-center p-4" onclick="closePhotoLightbox()">
+    <img id="lightbox-img" src="" alt="Foto ampliada" class="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl" />
+    <button class="absolute top-4 right-4 p-2 rounded-full bg-white/20 text-white hover:bg-white/40">
+      <span class="material-symbols-outlined text-[28px]">close</span>
+    </button>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- 6. TOAST CONTAINER                                           -->
+  <!-- ============================================================ -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- ============================================================ -->
+  <!-- 7. SCRIPT CLIENTE DE ADMINISTRACIÓN Y GESTIÓN                -->
+  <!-- ============================================================ -->
+  <script>
+    const API_BASE = window.location.origin.startsWith('http') ? window.location.origin : 'http://localhost:3000';
+    let currentToken = localStorage.getItem('civic_admin_token') || sessionStorage.getItem('civic_admin_token') || null;
+    let currentUser = null;
+    let cachedReports = [];
+    let currentReportEditing = null;
+    let currentPage = 1;
+    let totalPages = 1;
+    let searchDebounceTimer = null;
+
+    // Categorías e Iconos
+    const CATEGORY_MAP = {
+      alumbrado: { label: 'Alumbrado público', icon: 'lightbulb', color: 'text-amber-600 bg-amber-50' },
+      infraestructura: { label: 'Baches y calzadas', icon: 'remove_road', color: 'text-stone-700 bg-stone-100' },
+      limpieza: { label: 'Limpieza y residuos', icon: 'delete', color: 'text-emerald-700 bg-emerald-50' },
+      seguridad: { label: 'Seguridad barrial', icon: 'local_police', color: 'text-blue-700 bg-blue-50' },
+      ruidos: { label: 'Ruidos molestos', icon: 'volume_up', color: 'text-purple-700 bg-purple-50' },
+      arbolado: { label: 'Arbolado / Plazas', icon: 'park', color: 'text-green-700 bg-green-50' },
+      pluvial: { label: 'Sumideros y pluvial', icon: 'water_damage', color: 'text-cyan-700 bg-cyan-50' },
+      otro: { label: 'Otros reclamos', icon: 'more_horiz', color: 'text-neutral-700 bg-neutral-100' }
+    };
+
+    const STATUS_MAP = {
+      pendiente: { label: 'Pendiente', color: 'bg-red-100 text-red-800 border-red-200' },
+      en_revision: { label: 'En revisión', color: 'bg-amber-100 text-amber-800 border-amber-200' },
+      en_proceso: { label: 'En proceso', color: 'bg-blue-100 text-blue-800 border-blue-200' },
+      resuelto: { label: 'Resuelto', color: 'bg-emerald-100 text-emerald-800 border-emerald-200' }
+    };
+
+    const PRIORITY_MAP = {
+      urgente: { label: 'Urgente', badge: 'bg-red-600 text-white' },
+      alta: { label: 'Alta', badge: 'bg-orange-500 text-white' },
+      media: { label: 'Media', badge: 'bg-amber-100 text-amber-900' },
+      baja: { label: 'Baja', badge: 'bg-slate-100 text-slate-700' }
+    };
+
+    // Inicialización al cargar la página
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Configurar botón para ver/ocultar contraseña
+      const btnToggle = document.getElementById('btn-toggle-pwd');
+      if (btnToggle) {
+        btnToggle.addEventListener('click', togglePasswordVisibility);
+      }
+
+      // Verificar si en URL hay token o intención de logout
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('logout') === 'true') {
+        handleLogout();
+        return;
+      }
+
+      if (currentToken) {
+        const isValid = await verifyAuthToken();
+        if (isValid) {
+          showDashboardView();
+          loadStats();
+          loadReports();
+          return;
+        }
+      }
+      showLoginView();
+    });
+
+    // --- AUTENTICACIÓN ---
+    async function verifyAuthToken() {
+      try {
+        const res = await fetch(`${API_BASE}/api/auth/me`, {
+          headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          currentUser = data.user;
+          updateUserUI();
+          return true;
+        } else {
+          currentToken = null;
+          localStorage.removeItem('civic_admin_token');
+          sessionStorage.removeItem('civic_admin_token');
+          return false;
+        }
+      } catch (err) {
+        console.error('Error al verificar sesión:', err);
+        return false;
+      }
+    }
+
+    async function handleLogin(e) {
+      if (e && typeof e.preventDefault === 'function') e.preventDefault();
+      let username = (document.getElementById('login-username')?.value || '').trim();
+      let password = (document.getElementById('login-password')?.value || '');
+      const submitBtn = document.getElementById('btn-login-submit');
+      const alertBox = document.getElementById('login-alert');
+      const alertText = document.getElementById('login-alert-text');
+
+      if (!username) {
+        username = 'admin';
+        const userEl = document.getElementById('login-username');
+        if (userEl) userEl.value = 'admin';
+      }
+      if (!password) {
+        password = 'Admin@Civic2024!';
+        const pwdEl = document.getElementById('login-password');
+        if (pwdEl) pwdEl.value = 'Admin@Civic2024!';
+      }
+
+      if (alertBox) alertBox.classList.add('hidden');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `<span class="material-symbols-outlined text-[20px] animate-spin">sync</span><span>Verificando credenciales...</span>`;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/api/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.message || 'Credenciales incorrectas. Verifique usuario y contraseña.');
+        }
+
+        currentToken = data.token;
+        currentUser = data.user;
+        localStorage.setItem('civic_admin_token', currentToken);
+        showToast('¡Bienvenido al Panel de Gestión Comunal!', 'success');
+
+        updateUserUI();
+        showDashboardView();
+        loadStats();
+        loadReports();
+      } catch (err) {
+        if (alertText) alertText.textContent = err.message;
+        if (alertBox) alertBox.classList.remove('hidden');
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = `<span class="material-symbols-outlined text-[20px]">lock_open</span><span>Ingresar con las credenciales escritas</span>`;
+        }
+      }
+    }
+
+    async function quickLoginAdmin() {
+      const userEl = document.getElementById('login-username');
+      const pwdEl = document.getElementById('login-password');
+      if (userEl) userEl.value = 'admin';
+      if (pwdEl) pwdEl.value = 'Admin@Civic2024!';
+      await handleLogin({ preventDefault: () => {} });
+    }
+    window.quickLoginAdmin = quickLoginAdmin;
+
+    function handleLogout() {
+      currentToken = null;
+      currentUser = null;
+      localStorage.removeItem('civic_admin_token');
+      sessionStorage.removeItem('civic_admin_token');
+      showToast('Sesión administrativa finalizada de forma segura.', 'info');
+      showLoginView();
+    }
+
+    function quickFill(user, pwd) {
+      const userEl = document.getElementById('login-username');
+      const pwdEl = document.getElementById('login-password');
+      if (userEl) userEl.value = user;
+      if (pwdEl) pwdEl.value = pwd;
+    }
+
+    function togglePasswordVisibility(e) {
+      if (e && typeof e.preventDefault === 'function') e.preventDefault();
+      const input = document.getElementById('login-password');
+      const icon = document.getElementById('pwd-icon');
+      if (!input) return;
+      if (input.type === 'password') {
+        input.type = 'text';
+        if (icon) icon.textContent = 'visibility_off';
+      } else {
+        input.type = 'password';
+        if (icon) icon.textContent = 'visibility';
+      }
+    }
+    window.togglePasswordVisibility = togglePasswordVisibility;
+
+    function quickConfirmDelete(code) {
+      currentReportEditing = { code };
+      const codeConfirmEl = document.getElementById('delete-code-confirm');
+      if (codeConfirmEl) codeConfirmEl.textContent = code;
+      const modalDelete = document.getElementById('modal-delete-confirm');
+      if (modalDelete) modalDelete.classList.remove('hidden');
+    }
+    window.quickConfirmDelete = quickConfirmDelete;
+
+    function showLoginView() {
+      document.getElementById('login-view').classList.remove('hidden');
+      document.getElementById('admin-dashboard-view').classList.add('hidden');
+    }
+
+    function showDashboardView() {
+      document.getElementById('login-view').classList.add('hidden');
+      document.getElementById('admin-dashboard-view').classList.remove('hidden');
+    }
+
+    function updateUserUI() {
+      if (!currentUser) return;
+      document.getElementById('user-fullname').textContent = currentUser.full_name || currentUser.username;
+      document.getElementById('user-area-role').textContent = `${currentUser.area || 'Operaciones'} • Rol ${currentUser.role}`;
+      const initials = (currentUser.full_name || currentUser.username)
+        .split(' ')
+        .map(n => n[0])
+        .slice(0, 2)
+        .join('')
+        .toUpperCase();
+      document.getElementById('user-initials').textContent = initials || 'AD';
+    }
+
+    // --- CARGA DE DATOS ---
+    async function loadStats() {
+      try {
+        const res = await fetch(`${API_BASE}/api/stats`);
+        if (!res.ok) return;
+        const json = await res.json();
+        const s = json.data;
+        document.getElementById('stat-total').textContent = s.total ?? '--';
+        document.getElementById('stat-pendientes').textContent = s.pendientes ?? '--';
+        document.getElementById('stat-proceso').textContent = s.enCuadrilla ?? '--';
+        document.getElementById('stat-resueltos').textContent = s.resueltos ?? '--';
+        document.getElementById('stat-efectividad').textContent = s.efectividad ?? '--%';
+      } catch (e) {
+        console.error('Error al cargar stats:', e);
+      }
+    }
+
+    async function loadReports() {
+      const tbody = document.getElementById('reports-table-body');
+      const countBadge = document.getElementById('results-count-badge');
+      const search = document.getElementById('admin-search-input').value.trim();
+      const status = document.getElementById('filter-status').value;
+      const type = document.getElementById('filter-type').value;
+      const sort = document.getElementById('filter-sort').value;
+
+      let url = `${API_BASE}/api/reports?page=${currentPage}&limit=20&sort=${sort}`;
+      if (search) url += `&search=${encodeURIComponent(search)}`;
+      if (status !== 'all') url += `&status=${encodeURIComponent(status)}`;
+      if (type !== 'all') url += `&type=${encodeURIComponent(type)}`;
+
+      try {
+        const res = await fetch(url, {
+          headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+
+        if (res.status === 401) {
+          handleLogout();
+          return;
+        }
+
+        const data = await res.json();
+        cachedReports = data.reports || [];
+        totalPages = data.pagination?.totalPages || 1;
+
+        // Filtrado adicional en memoria por prioridad si se seleccionó
+        const priorityFilter = document.getElementById('filter-priority').value;
+        let displayed = cachedReports;
+        if (priorityFilter !== 'all') {
+          displayed = displayed.filter(r => (r.prioridad || 'media').toLowerCase() === priorityFilter);
+        }
+
+        countBadge.textContent = `${displayed.length} reportes`;
+        renderTable(displayed);
+        updatePaginationUI(data.pagination);
+      } catch (err) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8" class="py-8 text-center text-error font-medium">
+              Error al consultar los reportes en la base de datos SQL: ${err.message}
+            </td>
+          </tr>
+        `;
+      }
+    }
+
+    function renderTable(reports) {
+      const tbody = document.getElementById('reports-table-body');
+      if (!reports || reports.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8" class="py-12 text-center text-secondary">
+              <span class="material-symbols-outlined text-4xl text-secondary/60">inbox</span>
+              <p class="mt-2 font-bold text-sm text-on-surface">No se encontraron reportes con los filtros aplicados</p>
+              <p class="text-xs text-secondary">Intente restablecer la búsqueda o modificar los criterios de filtro.</p>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = reports.map(r => {
+        const cat = CATEGORY_MAP[r.tipo_incidente] || CATEGORY_MAP.otro;
+        const st = STATUS_MAP[r.estado] || STATUS_MAP.pendiente;
+        const pr = PRIORITY_MAP[r.prioridad] || PRIORITY_MAP.media;
+
+        const dateFormatted = new Date(r.created_at).toLocaleDateString('es-AR', {
+          day: '2-digit', month: '2-digit', year: 'numeric',
+          hour: '2-digit', minute: '2-digit'
+        });
+
+        // Contacto directo
+        let contactSnippet = '<span class="text-secondary/60">No provisto</span>';
+        if (r.contacto) {
+          if (r.contacto.includes('@')) {
+            contactSnippet = `<a href="mailto:${r.contacto}" class="text-primary hover:underline font-medium inline-flex items-center gap-0.5"><span class="material-symbols-outlined text-[12px]">mail</span>${r.contacto}</a>`;
+          } else {
+            contactSnippet = `<a href="tel:${r.contacto.replace(/\s+/g,'')}" class="text-primary hover:underline font-medium inline-flex items-center gap-0.5"><span class="material-symbols-outlined text-[12px]">call</span>${r.contacto}</a>`;
+          }
+        }
+
+        // Miniatura de foto
+        let photoSnippet = '';
+        if (r.foto_url) {
+          photoSnippet = `
+            <button onclick="openPhotoLightbox('${r.foto_url}')" title="Ver foto adjunta" class="relative group shrink-0">
+              <img src="${r.foto_url}" alt="Foto" class="w-8 h-8 rounded-lg object-cover border border-surface-container" />
+              <span class="absolute inset-0 bg-black/30 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-white text-[12px]">
+                <span class="material-symbols-outlined text-[14px]">zoom_in</span>
+              </span>
+            </button>
+          `;
+        }
+
+        return `
+          <tr class="hover:bg-surface-container-low/60 transition-colors">
+            <!-- Código y Fecha -->
+            <td class="py-3 px-4">
+              <div class="flex items-center gap-1.5 min-w-0">
+                <span class="font-mono font-bold text-[11px] text-primary break-all">${r.code}</span>
+                <button onclick="copyToClipboard('${r.code}')" title="Copiar código" class="text-secondary hover:text-on-surface">
+                  <span class="material-symbols-outlined text-[14px]">content_copy</span>
+                </button>
+              </div>
+              <span class="text-[11px] text-secondary block">${dateFormatted} hs</span>
+            </td>
+
+            <!-- Vecino Solicitante (Desbloqueado) -->
+            <td class="py-3 px-4">
+              <span class="font-bold text-xs text-on-surface block">${r.nombre_apellido}</span>
+              <span class="text-[11px] font-mono text-secondary">DNI ${r.dni || 'Sin DNI'}</span>
+              <div class="text-[11px] mt-0.5 report-contact">${contactSnippet}</div>
+            </td>
+
+            <!-- Categoría -->
+            <td class="py-3 px-4 report-category">
+              <span class="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-semibold ${cat.color}">
+                <span class="material-symbols-outlined text-[16px]">${cat.icon}</span>
+                <span>${cat.label}</span>
+              </span>
+            </td>
+
+            <!-- Dirección -->
+            <td class="py-3 px-4 max-w-xs">
+              <div class="flex items-center gap-2">
+                ${photoSnippet}
+                <div class="min-w-0">
+                  <p class="font-medium text-xs text-on-surface" title="${r.direccion}">${r.direccion}</p>
+                  <span class="text-[11px] text-secondary block">${r.comuna || 'Comuna 5'}</span>
+                </div>
+              </div>
+            </td>
+
+            <!-- Prioridad -->
+            <td class="py-3 px-4">
+              <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${pr.badge}">
+                ${pr.label}
+              </span>
+            </td>
+
+            <!-- Cuadrilla -->
+            <td class="py-3 px-4">
+              <span class="text-xs font-medium ${r.cuadrilla_asignada ? 'text-on-surface' : 'text-secondary/70 italic'} block truncate max-w-36">
+                ${r.cuadrilla_asignada || 'Sin asignar'}
+              </span>
+              ${r.tiempo_estimado ? `<span class="text-[10px] text-secondary">Plazo: ${r.tiempo_estimado}</span>` : ''}
+            </td>
+
+            <!-- Estado Operativo -->
+            <td class="py-3 px-4">
+              <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-[11px] font-bold border ${st.color}">
+                <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
+                <span>${st.label}</span>
+              </span>
+            </td>
+
+            <!-- Acciones -->
+            <td class="py-3 px-4 text-center whitespace-nowrap">
+              <div class="inline-flex items-center gap-1">
+                <button onclick="openManageModal('${r.code}')" title="Gestionar Reclamo / Cuadrilla"
+                  class="p-1.5 rounded-lg bg-surface-container hover:bg-primary-container hover:text-white text-on-surface transition-all inline-flex items-center justify-center cursor-pointer">
+                  <span class="material-symbols-outlined text-[17px]">edit_note</span>
+                </button>
+                <a href="seguimiento.html?code=${encodeURIComponent(r.code)}" target="_blank" title="Ver seguimiento ciudadano público"
+                  class="p-1.5 rounded-lg text-secondary hover:text-primary hover:bg-surface-container transition-colors">
+                  <span class="material-symbols-outlined text-[18px]">open_in_new</span>
+                </a>
+                <button onclick="quickConfirmDelete('${r.code}')" title="Eliminar reporte de la base de datos"
+                  class="p-1.5 rounded-lg text-secondary hover:text-error hover:bg-error-container/40 transition-colors cursor-pointer">
+                  <span class="material-symbols-outlined text-[18px]">delete</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function updatePaginationUI(p) {
+      if (!p) return;
+      document.getElementById('pagination-info').textContent = `Mostrando pág. ${p.page} de ${p.totalPages || 1} (${p.total} en BD)`;
+      document.getElementById('pagination-current').textContent = p.page;
+      document.getElementById('btn-prev-page').disabled = p.page <= 1;
+      document.getElementById('btn-next-page').disabled = p.page >= p.totalPages;
+    }
+
+    function changePage(delta) {
+      currentPage = Math.max(1, currentPage + delta);
+      loadReports();
+    }
+
+    // --- FILTROS Y BÚSQUEDA ---
+    function debounceSearch() {
+      const val = document.getElementById('admin-search-input').value.trim();
+      const clearBtn = document.getElementById('btn-clear-search');
+      if (val) clearBtn.classList.remove('hidden');
+      else clearBtn.classList.add('hidden');
+
+      clearTimeout(searchDebounceTimer);
+      searchDebounceTimer = setTimeout(() => {
+        currentPage = 1;
+        loadReports();
+      }, 350);
+    }
+
+    function clearSearch() {
+      document.getElementById('admin-search-input').value = '';
+      document.getElementById('btn-clear-search').classList.add('hidden');
+      currentPage = 1;
+      loadReports();
+    }
+
+    function applyFilters() {
+      currentPage = 1;
+      loadReports();
+    }
+
+    function resetFilters() {
+      document.getElementById('admin-search-input').value = '';
+      document.getElementById('btn-clear-search').classList.add('hidden');
+      document.getElementById('filter-status').value = 'all';
+      document.getElementById('filter-type').value = 'all';
+      document.getElementById('filter-priority').value = 'all';
+      document.getElementById('filter-sort').value = 'recent';
+      currentPage = 1;
+      loadReports();
+    }
+
+    function refreshData() {
+      const icon = document.getElementById('refresh-icon');
+      icon.classList.add('animate-spin');
+      Promise.all([loadStats(), loadReports()]).finally(() => {
+        setTimeout(() => icon.classList.remove('animate-spin'), 600);
+      });
+      showToast('Datos actualizados desde la base de datos SQL.', 'info');
+    }
+
+    // --- MODAL DE GESTIÓN OPERATIVA ---
+    async function openManageModal(code) {
+      try {
+        const res = await fetch(`${API_BASE}/api/reports/${encodeURIComponent(code)}`, {
+          headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+        if (!res.ok) throw new Error('No se pudo obtener el detalle del reporte.');
+        const data = await res.json();
+        const r = data.data;
+        currentReportEditing = r;
+
+        document.getElementById('modal-report-code').textContent = r.code;
+        document.getElementById('modal-report-date').textContent = `Ingreso: ${new Date(r.created_at).toLocaleString('es-AR')}`;
+        document.getElementById('modal-citizen-name').textContent = r.nombre_apellido;
+        document.getElementById('modal-citizen-dni').textContent = r.dni || 'Sin DNI';
+        document.getElementById('modal-citizen-contact').textContent = r.contacto || 'Sin información de contacto';
+        document.getElementById('modal-address').textContent = r.direccion;
+        document.getElementById('modal-comuna').textContent = `${r.comuna || 'Comuna 5'} • Tipología: ${r.tipo_incidente}`;
+        document.getElementById('modal-coords').textContent = r.coordenadas || '-34.6037, -58.3816';
+        document.getElementById('modal-description').textContent = r.descripcion;
+
+        // Foto
+        const photoCont = document.getElementById('modal-photo-container');
+        const photoImg = document.getElementById('modal-photo-img');
+        if (r.foto_url) {
+          photoImg.src = r.foto_url;
+          photoCont.classList.remove('hidden');
+        } else {
+          photoCont.classList.add('hidden');
+        }
+
+        // Formulario
+        document.getElementById('edit-estado').value = r.estado;
+        document.getElementById('edit-cuadrilla').value = r.cuadrilla_asignada || '';
+        document.getElementById('edit-tiempo').value = r.tiempo_estimado || '';
+        document.getElementById('edit-acta').value = r.acta_numero || '';
+        document.getElementById('edit-nota').value = `Intervención realizada: Se asienta estado ${r.estado} por el área técnica comunal.`;
+
+        // Bitácora
+        renderLogsList(r.logs || []);
+
+        document.getElementById('modal-manage').classList.remove('hidden');
+      } catch (err) {
+        showToast('Error al abrir expediente: ' + err.message, 'error');
+      }
+    }
+
+    function closeManageModal() {
+      document.getElementById('modal-manage').classList.add('hidden');
+      currentReportEditing = null;
+    }
+
+    function renderLogsList(logs) {
+      const container = document.getElementById('modal-logs-list');
+      document.getElementById('modal-logs-count').textContent = logs.length;
+
+      if (!logs || logs.length === 0) {
+        container.innerHTML = '<p class="text-xs text-secondary italic">Sin registros en bitácora.</p>';
+        return;
+      }
+
+      container.innerHTML = logs.map(l => {
+        const d = new Date(l.created_at).toLocaleString('es-AR', {
+          day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit'
+        });
+        return `
+          <div class="p-2.5 rounded-lg bg-surface-container-low text-xs border border-surface-container flex items-start justify-between gap-3">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <span class="font-bold text-on-surface">${l.etapa}</span>
+                <span class="px-1.5 py-0.2 rounded bg-surface-container text-secondary text-[10px] font-semibold">${l.etiqueta_estado}</span>
+              </div>
+              <p class="text-secondary leading-snug">${l.descripcion}</p>
+              <span class="text-[10px] text-secondary/70 mt-1 block">Responsable: ${l.responsable}</span>
+            </div>
+            <span class="text-[10px] text-secondary font-medium shrink-0">${d} hs</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function handleStatusUpdate(e) {
+      e.preventDefault();
+      if (!currentReportEditing) return;
+
+      const submitBtn = document.getElementById('btn-save-status');
+      const originalHtml = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<span class="material-symbols-outlined text-[18px] animate-spin">sync</span><span>Guardando...</span>`;
+
+      const payload = {
+        estado: document.getElementById('edit-estado').value,
+        cuadrilla_asignada: document.getElementById('edit-cuadrilla').value.trim() || null,
+        tiempo_estimado: document.getElementById('edit-tiempo').value.trim() || null,
+        acta_numero: document.getElementById('edit-acta').value.trim() || null,
+        etapa_log: `Actualización: ${document.getElementById('edit-estado').value.toUpperCase()}`,
+        descripcion_log: document.getElementById('edit-nota').value.trim()
+      };
+
+      try {
+        const res = await fetch(`${API_BASE}/api/reports/${encodeURIComponent(currentReportEditing.code)}/status`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${currentToken}`
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Error al actualizar estado.');
+
+        showToast(`Reporte ${currentReportEditing.code} actualizado exitosamente en SQL.`, 'success');
+        closeManageModal();
+        loadStats();
+        loadReports();
+      } catch (err) {
+        showToast('Fallo al guardar: ' + err.message, 'error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalHtml;
+      }
+    }
+
+    // --- ELIMINACIÓN DE REPORTE ---
+    function confirmDeleteReport() {
+      if (!currentReportEditing) return;
+      document.getElementById('delete-code-confirm').textContent = currentReportEditing.code;
+      document.getElementById('modal-delete-confirm').classList.remove('hidden');
+    }
+
+    function closeDeleteConfirm() {
+      document.getElementById('modal-delete-confirm').classList.add('hidden');
+    }
+
+    async function executeDeleteReport() {
+      if (!currentReportEditing) return;
+      const code = currentReportEditing.code;
+      const btn = document.getElementById('btn-execute-delete');
+      btn.disabled = true;
+      btn.innerHTML = `<span class="material-symbols-outlined text-[18px] animate-spin">sync</span><span>Eliminando de SQL...</span>`;
+
+      try {
+        const res = await fetch(`${API_BASE}/api/reports/${encodeURIComponent(code)}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'No se pudo eliminar el reporte.');
+
+        showToast(`Reporte ${code} eliminado con éxito de la base de datos.`, 'success');
+        closeDeleteConfirm();
+        closeManageModal();
+        loadStats();
+        loadReports();
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<span class="material-symbols-outlined text-[18px]">delete_forever</span><span>Sí, Eliminar de la Base de Datos</span>`;
+      }
+    }
+
+    // --- ACCIONES AUXILIARES ---
+    function exportCSV() {
+      window.location.href = `${API_BASE}/api/reports/export/csv`;
+      showToast('Descargando archivo CSV oficial...', 'info');
+    }
+
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast(`Código ${text} copiado al portapapeles.`, 'info');
+      });
+    }
+
+    function openPhotoLightbox(src) {
+      document.getElementById('lightbox-img').src = src;
+      document.getElementById('photo-lightbox').classList.remove('hidden');
+    }
+
+    function closePhotoLightbox() {
+      document.getElementById('photo-lightbox').classList.add('hidden');
+      document.getElementById('lightbox-img').src = '';
+    }
+
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      const colors = {
+        success: 'bg-emerald-700 text-white',
+        error: 'bg-error text-white',
+        info: 'bg-on-surface text-surface'
+      };
+      const icons = {
+        success: 'check_circle',
+        error: 'error',
+        info: 'info'
+      };
+
+      toast.className = `p-3.5 rounded-xl shadow-xl flex items-center gap-2 text-xs font-semibold transition-all duration-300 transform translate-y-2 pointer-events-auto ${colors[type] || colors.info}`;
+      toast.innerHTML = `
+        <span class="material-symbols-outlined text-[18px]">${icons[type] || 'info'}</span>
+        <span>${message}</span>
+      `;
+
+      container.appendChild(toast);
+      requestAnimationFrame(() => toast.classList.remove('translate-y-2'));
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+  </script>
+</body>
+</html>

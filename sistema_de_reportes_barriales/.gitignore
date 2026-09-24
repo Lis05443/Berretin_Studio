@@ -1,0 +1,24 @@
+# Dependencias
+backend/node_modules/
+
+# Variables de entorno con secretos reales
+backend/.env
+
+# Base de datos SQL generada en runtime (se recrea con `npm run init-db`)
+backend/src/database/*.sqlite
+backend/src/database/*.sqlite-shm
+backend/src/database/*.sqlite-wal
+
+# Fotos subidas por los vecinos (contenido de usuario, no versionar)
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Logs
+*.log
+npm-debug.log*
+
+# Sistema operativo / editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

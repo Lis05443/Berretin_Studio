@@ -1,0 +1,154 @@
+{
+  "info": {
+    "name": "Sistema de Reportes Barriales",
+    "description": "Colección para probar la API REST del sistema municipal de reportes barriales.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:3000/api" },
+    { "key": "token", "value": "" },
+    { "key": "report_code", "value": "REP-2024-8942" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login (admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.token) { pm.collectionVariables.set('token', json.token); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"Admin@Civic2024!\"\n}"
+            },
+            "url": "{{base_url}}/auth/login"
+          }
+        },
+        {
+          "name": "Perfil autenticado",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/auth/me"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reportes",
+      "item": [
+        {
+          "name": "Crear reporte",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "nombre_apellido", "value": "Juan Pérez", "type": "text" },
+                { "key": "dni", "value": "30123456", "type": "text" },
+                { "key": "contacto", "value": "juan@example.com", "type": "text" },
+                { "key": "tipo_incidente", "value": "alumbrado", "type": "text" },
+                { "key": "direccion", "value": "Av. Rivadavia 1234", "type": "text" },
+                { "key": "descripcion", "value": "Luminaria apagada hace 3 días.", "type": "text" },
+                { "key": "foto", "type": "file", "src": [] }
+              ]
+            },
+            "url": "{{base_url}}/reports"
+          }
+        },
+        {
+          "name": "Listar reportes",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/reports?page=1&limit=10"
+          }
+        },
+        {
+          "name": "Detalle por código",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/reports/{{report_code}}"
+          }
+        },
+        {
+          "name": "Actualizar estado (requiere token)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"en_proceso\",\n  \"cuadrilla_asignada\": \"Cuadrilla Norte\"\n}"
+            },
+            "url": "{{base_url}}/reports/{{report_code}}/status"
+          }
+        },
+        {
+          "name": "Eliminar reporte (admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{base_url}}/reports/{{report_code}}"
+          }
+        },
+        {
+          "name": "Exportar CSV",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/reports/export/csv"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Comentarios",
+      "item": [
+        {
+          "name": "Agregar testimonio",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"autor\": \"Vecina Anónima\",\n  \"contenido\": \"Confirmo que sigue sin arreglarse.\"\n}"
+            },
+            "url": "{{base_url}}/reports/{{report_code}}/comments"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Estadísticas",
+      "item": [
+        {
+          "name": "Métricas comunales",
+          "request": { "method": "GET", "url": "{{base_url}}/stats" }
+        }
+      ]
+    },
+    {
+      "name": "Salud del sistema",
+      "item": [
+        {
+          "name": "Health check",
+          "request": { "method": "GET", "url": "http://localhost:3000/api/health" }
+        }
+      ]
+    }
+  ]
+}

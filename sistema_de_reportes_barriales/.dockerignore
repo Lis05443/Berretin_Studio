@@ -1,0 +1,9 @@
+**/node_modules
+**/.git
+**/.env
+backend/uploads/*
+!backend/uploads/.gitkeep
+backend/src/database/*.sqlite
+backend/src/database/*.sqlite-shm
+backend/src/database/*.sqlite-wal
+**/*.log
