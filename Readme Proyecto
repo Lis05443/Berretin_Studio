@@ -70,9 +70,6 @@ JWT_SECRET="$(openssl rand -hex 32)" docker compose up --build -d
 
 - `backend/docs/DER.md` — Diagrama entidad-relación de la base de datos.
 - `backend/docs/ARQUITECTURA.md` — Diagramas de arquitectura y de secuencia, y justificación de decisiones de diseño.
-- `backend/docs/DEFENSA_TECNICA.md` — Guion sugerido y preguntas frecuentes del jurado para la Fase 3 de la olimpíada.
-
----
 
 ## 🛡️ Medidas de Ciberseguridad Implementadas
 
