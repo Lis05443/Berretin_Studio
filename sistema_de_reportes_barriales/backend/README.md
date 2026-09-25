@@ -4,7 +4,7 @@ Servidor backend desarrollado en **JavaScript (Node.js con Express)**, con base 
 
 ---
 
-## 🚀 Inicio Rápido
+## Inicio Rápido
 
 ### Requisitos
 - **Node.js**: v22+ (v24.19.0 LTS instalado y verificado).
@@ -25,9 +25,9 @@ npm run dev      # con recarga automática de desarrollo
 ```
 
 El servidor quedará disponible en:
-👉 **`http://localhost:3000`**
+**`http://localhost:3000`**
 
-### ⚠️ Por qué NO se puede abrir el HTML directamente con doble clic
+### NO se puede abrir el HTML directamente con doble clic
 Las 4 páginas (`frontend/index.html`, `reportes.html`, `seguimiento.html`, `administrador.html`) le piden datos a la base SQL a través de la API (`/api/reports`, `/api/auth/login`, etc.). Esas peticiones solo funcionan si el navegador las abre **a través del servidor** (`http://localhost:3000/...`). Si se abre el archivo `.html` con doble clic (protocolo `file://`), el navegador no tiene con quién hablar: no hay servidor, no hay base de datos, y por eso "no dejaba subir reportes". Los lanzadores de arriba resuelven esto sin que tengas que escribir comandos.
 
 ### Páginas del frontend (carpeta `frontend/`, cada una con su propio archivo)
@@ -41,7 +41,7 @@ Las 4 páginas (`frontend/index.html`, `reportes.html`, `seguimiento.html`, `adm
 
 ---
 
-## 🐳 Ejecutar con Docker
+## Ejecutar con Docker
 
 Desde la **raíz del proyecto** (un nivel arriba de `backend/`, donde también está la carpeta con las 4 vistas frontend):
 
@@ -58,7 +58,7 @@ JWT_SECRET="$(openssl rand -hex 32)" docker compose up --build -d
 
 ---
 
-## 📖 Documentación de la API (Swagger / Postman)
+## Documentación de la API (Swagger / Postman)
 
 - **Swagger UI**: con el servidor corriendo, abrir `http://localhost:3000/docs`.
 - **Especificación OpenAPI**: `backend/docs/openapi.yaml` (importable en Postman, Insomnia, etc.).
@@ -66,14 +66,14 @@ JWT_SECRET="$(openssl rand -hex 32)" docker compose up --build -d
 
 ---
 
-## 🗂️ Documentación técnica adicional
+## Documentación técnica adicional
 
 - `backend/docs/DER.md` — Diagrama entidad-relación de la base de datos.
 - `backend/docs/ARQUITECTURA.md` — Diagramas de arquitectura y de secuencia, y justificación de decisiones de diseño.
 
 ---
 
-## 🛡️ Medidas de Ciberseguridad Implementadas
+## Medidas de Ciberseguridad Implementadas
 
 1. **Inmunidad contra Inyecciones SQL (SQLi Defense)**:
    - 100% de las consultas a la base de datos se ejecutan con **sentencias preparadas (`Prepared Statements`)** y parámetros enlazados (`?`).
@@ -108,7 +108,7 @@ JWT_SECRET="$(openssl rand -hex 32)" docker compose up --build -d
 
 ---
 
-## 🗄️ Base de Datos SQL
+## Base de Datos SQL
 
 El motor SQL utiliza SQLite con `PRAGMA foreign_keys = ON;` y `PRAGMA journal_mode = WAL;` para máxima concurrencia y tolerancia a fallos.
 
@@ -121,7 +121,7 @@ El motor SQL utiliza SQLite con `PRAGMA foreign_keys = ON;` y `PRAGMA journal_mo
 
 ---
 
-## 🌐 Endpoints de la API REST
+## Endpoints de la API REST
 
 ### Reportes
 - `POST /api/reports`: Crear nuevo reporte (soporta `multipart/form-data` con foto).
@@ -142,7 +142,7 @@ El motor SQL utiliza SQLite con `PRAGMA foreign_keys = ON;` y `PRAGMA journal_mo
 
 ---
 
-## 👥 Credenciales de Prueba (Operadores Comunales)
+## Credenciales de Prueba (Operadores Comunales)
 
 | Usuario | Contraseña | Rol | Área |
 | :--- | :--- | :--- | :--- |
@@ -152,7 +152,7 @@ El motor SQL utiliza SQLite con `PRAGMA foreign_keys = ON;` y `PRAGMA journal_mo
 
 ---
 
-## 🧪 Pruebas Automatizadas
+## Pruebas Automatizadas
 
 Para ejecutar la suite completa de 29 pruebas automatizadas (incluyendo verificación de neutralización de SQL Injection y XSS):
 
