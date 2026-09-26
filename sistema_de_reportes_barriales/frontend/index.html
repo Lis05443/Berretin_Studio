@@ -476,12 +476,12 @@
                 </div>
 
                 <!-- Input oculto para coordenadas -->
-                <input type="hidden" id="coordenadasInput" value="-34.6037, -58.3816" />
+                <input type="hidden" id="coordenadasInput" value="-34.6534, -58.6198" />
 
                 <!-- Visor Interactivo de Google Maps Integrado -->
                 <div class="relative w-full h-80 rounded-2xl overflow-hidden shadow-sm mt-3 border border-surface-container bg-surface-container">
                   <iframe id="gmap-frame" class="w-full h-full border-0"
-                    src="https://maps.google.com/maps?q=Buenos+Aires,+Argentina&t=&z=14&ie=UTF8&iwloc=&output=embed"
+                    src="https://maps.google.com/maps?q=Mor%C3%B3n,+Buenos+Aires,+Argentina&t=&z=13&ie=UTF8&iwloc=&output=embed"
                     loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
 
                   <!-- HUD Inferior con Enlace Directo a Google Maps -->
@@ -490,7 +490,7 @@
                       <span class="material-symbols-outlined text-primary-container text-[18px] shrink-0">pin_drop</span>
                       <span id="map-address-hud" class="font-label-sm text-label-sm font-semibold truncate">Escribe una dirección para ubicarla en el mapa</span>
                     </div>
-                    <a id="btn-open-gmaps" href="https://www.google.com/maps/search/?api=1&query=Buenos+Aires" target="_blank" class="font-label-sm text-label-sm text-primary font-bold hover:underline inline-flex items-center gap-1 shrink-0 ml-2">
+                    <a id="btn-open-gmaps" href="https://www.google.com/maps/search/?api=1&query=Mor%C3%B3n%2C+Buenos+Aires%2C+Argentina" target="_blank" class="font-label-sm text-label-sm text-primary font-bold hover:underline inline-flex items-center gap-1 shrink-0 ml-2">
                       <span>Abrir en Google Maps</span>
                       <span class="material-symbols-outlined text-[14px]">open_in_new</span>
                     </a>
@@ -750,18 +750,30 @@
       document.getElementById('charCount').textContent = length + ' / 500';
     }
 
-    // 4. Asociación en Vivo a Google Maps
+    // 4. Asociación en Vivo a Google Maps (restringido al partido de Morón)
+    const OTRAS_LOCALIDADES_BA = ['caba', 'ciudad autónoma', 'ciudad autonoma', 'almagro', 'caballito', 'palermo', 'recoleta', 'belgrano', 'avellaneda', 'quilmes', 'la plata', 'tigre', 'san isidro', 'vicente lopez', 'vicente lópez', 'lomas de zamora', 'lanús', 'lanus'];
+
     function updateGoogleMap(address) {
       if (!address || address.trim().length < 3) return;
-      
-      const query = encodeURIComponent(address.trim() + ', Buenos Aires, Argentina');
-      const mapFrame = document.getElementById('gmap-frame');
+
+      const direccionLimpia = address.trim();
       const hud = document.getElementById('map-address-hud');
+
+      // Aviso no bloqueante si la dirección menciona explícitamente otra localidad
+      const contieneOtraLocalidad = OTRAS_LOCALIDADES_BA.some(loc => direccionLimpia.toLowerCase().includes(loc));
+
+      const query = encodeURIComponent(direccionLimpia + ', Morón, Buenos Aires, Argentina');
+      const mapFrame = document.getElementById('gmap-frame');
       const gmapsBtn = document.getElementById('btn-open-gmaps');
 
       mapFrame.src = `https://maps.google.com/maps?q=${query}&t=&z=16&ie=UTF8&iwloc=&output=embed`;
-      hud.textContent = `Ubicación: ${address.trim()}`;
       gmapsBtn.href = `https://www.google.com/maps/search/?api=1&query=${query}`;
+
+      if (contieneOtraLocalidad) {
+        hud.textContent = `⚠ Este sistema solo cubre el partido de Morón. Verificá la dirección: ${direccionLimpia}`;
+      } else {
+        hud.textContent = `Ubicación: ${direccionLimpia}`;
+      }
     }
 
     function debounceUpdateMap(val) {
@@ -813,7 +825,7 @@
           contacto: document.getElementById('contactoInput').value.trim() || null,
           tipo_incidente: document.getElementById('tipoIncidenteInput').value.trim(),
           direccion: document.getElementById('direccionIncidente').value.trim(),
-          coordenadas: document.getElementById('coordenadasInput').value.trim() || '-34.6037, -58.3816',
+          coordenadas: document.getElementById('coordenadasInput').value.trim() || '-34.6534, -58.6198',
           prioridad: document.getElementById('prioridadIncidente').value,
           descripcion: document.getElementById('descripcionIncidente').value.trim()
         };
